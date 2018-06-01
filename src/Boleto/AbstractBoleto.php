@@ -87,7 +87,7 @@ abstract class AbstractBoleto implements BoletoContract
      *
      * @var bool
      */
-    protected $isFloatjuros = true;
+    protected $isFloatJuros = true;
 
     /**
      * Dias para protesto
