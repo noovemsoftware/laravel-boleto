@@ -1086,7 +1086,7 @@ abstract class AbstractBoleto implements BoletoContract
         if($this->isFloatJuros) {
           $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
         } else {
-          $this->juros = $juros > 0 ? juros : 0;
+          $this->juros = $juros > 0 ? $juros : 0;
         }
         return $this;
     }
