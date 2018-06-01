@@ -1092,6 +1092,18 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
+     * Seta a variavel calculaPercentualJuros
+     *
+     * @param bool $calcula
+     *
+     * @return bool
+     */
+    public function setCalculaPercentualJuros($calcula)
+    {
+      return $this->calculaPercentualJuros = $calcula;
+    }
+
+    /**
      * Retorna valor mora diária
      *
      * @return float
