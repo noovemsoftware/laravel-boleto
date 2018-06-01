@@ -74,6 +74,14 @@ abstract class AbstractBoleto implements BoletoContract
      * @var int
      */
     protected $jurosApos = 0;
+
+    /**
+     * Calcula autimaticamente o valor de mora atraves de percentual vindo de $juros
+     *
+     * @var bool
+     */
+    protected $calculaPercentualJuros = true;
+
     /**
      * Dias para protesto
      *
@@ -1093,7 +1101,12 @@ abstract class AbstractBoleto implements BoletoContract
         if (!$this->getJuros() > 0) {
            return 0;
         }
-        return Util::percent($this->getValor(), $this->getJuros())/30;
+
+        if($this->calculaPercentualJuros){
+          return Util::percent($this->getValor(), $this->getJuros())/30;
+        } else {
+          return $this->getJuros();
+        }
     }
 
     /**
