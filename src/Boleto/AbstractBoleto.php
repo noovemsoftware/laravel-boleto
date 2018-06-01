@@ -83,6 +83,13 @@ abstract class AbstractBoleto implements BoletoContract
     protected $calculaPercentualJuros = true;
 
     /**
+     * Se juros e float nao
+     *
+     * @var bool
+     */
+    protected $isFloatjuros = true;
+
+    /**
      * Dias para protesto
      *
      * @var integer
@@ -1076,13 +1083,16 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setJuros($juros)
     {
-        $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
-
+        if($this->isFloatJuros) {
+          $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
+        } else {
+          $this->juros = $juros > 0 ? juros : 0;
+        }
         return $this;
     }
 
     /**
-     * Retorna % juros
+     * Retorna % jurosApos
      *
      * @return float
      */
@@ -1096,11 +1106,25 @@ abstract class AbstractBoleto implements BoletoContract
      *
      * @param bool $calcula
      *
-     * @return bool
+     * @return AbstractBoleto
      */
     public function setCalculaPercentualJuros($calcula)
     {
-      return $this->calculaPercentualJuros = $calcula;
+      $this->calculaPercentualJuros = $calcula;
+      return $this;
+    }
+
+    /**
+     * Seta a variavel isFloatJuros
+     *
+     * @param bool $is
+     *
+     * @return AbstractBoleto
+     */
+    public function setIsFloatJuros($is)
+    {
+      $this->isFloatJuros = $is;
+      return $this;
     }
 
     /**
