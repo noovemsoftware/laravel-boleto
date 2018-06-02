@@ -80,14 +80,14 @@ abstract class AbstractBoleto implements BoletoContract
      *
      * @var bool
      */
-    protected $calculaPercentualJuros = true;
+    protected $jurosEmPercentual = true;
 
     /**
-     * Se juros e float nao
+     * Se juros esta sendo passado como centavos
      *
      * @var bool
      */
-    protected $isFloatJuros = true;
+    protected $jurosEmCentavos = false;
 
     /**
      * Dias para protesto
@@ -1083,7 +1083,7 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setJuros($juros)
     {
-        if($this->isFloatJuros) {
+        if(!$this->JurosEmCentavos) {
           $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
         } else {
           $this->juros = $juros > 0 ? $juros : 0;
@@ -1102,35 +1102,35 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
-     * Seta a variavel calculaPercentualJuros
-     *
-     * @param bool $calcula
-     *
-     * @return AbstractBoleto
-     */
-    public function setCalculaPercentualJuros($calcula)
-    {
-      $this->calculaPercentualJuros = $calcula;
-      return $this;
-    }
-
-    /**
-     * Seta a variavel isFloatJuros
+     * Seta a variavel jurosEmPercentual
      *
      * @param bool $is
      *
      * @return AbstractBoleto
      */
-    public function setIsFloatJuros($is)
+    public function setJurosEmPercentual($is)
     {
-      $this->isFloatJuros = $is;
+      $this->jurosEmPercentual = $is;
+      return $this;
+    }
+
+    /**
+     * Seta a variavel jurosEmCentavos
+     *
+     * @param bool $is
+     *
+     * @return AbstractBoleto
+     */
+    public function setJurosEmCentavos($is)
+    {
+      $this->jurosEmCentavos = $is;
       return $this;
     }
 
     /**
      * Retorna valor mora diária
      *
-     * @return float
+     * @return mixed
      */
     public function getMoraDia()
     {
@@ -1138,7 +1138,7 @@ abstract class AbstractBoleto implements BoletoContract
            return 0;
         }
 
-        if($this->calculaPercentualJuros){
+        if($this->jurosEmPercentual){
           return Util::percent($this->getValor(), $this->getJuros())/30;
         } else {
           return $this->getJuros();
