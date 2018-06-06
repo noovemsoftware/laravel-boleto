@@ -160,7 +160,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setDataCredito($this->rem(296, 301, $detalhe));
 
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
-        if (!$usandoCentavos){
+        if (!$this->usandoCentavos){
           $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
           ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
           ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
