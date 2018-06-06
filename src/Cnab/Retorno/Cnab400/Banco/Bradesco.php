@@ -157,7 +157,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setOcorrenciaDescricao(array_get($this->ocorrencias, $d->getOcorrencia(), 'Desconhecida'))
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
             ->setDataVencimento($this->rem(147, 152, $detalhe))
-            ->setDataCredito($this->rem(296, 301, $detalhe))
+            ->setDataCredito($this->rem(296, 301, $detalhe));
 
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if (!$usandoCentavos){
