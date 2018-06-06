@@ -158,14 +158,28 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
             ->setDataVencimento($this->rem(147, 152, $detalhe))
             ->setDataCredito($this->rem(296, 301, $detalhe))
-            ->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
-            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
-            ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
+
+        // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
+        if (!$usandoCentavos){
+          $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
+          ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
+          ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
+          ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
+          ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
+          ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
+          ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
+          ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
+        } else {
+          $d->setValor($this->rem(153, 165, $detalhe))
+          ->setValorTarifa($this->rem(176, 188, $detalhe))
+          ->setValorIOF($this->rem(215, 227, $detalhe))
+          ->setValorAbatimento($this->rem(228, 240, $detalhe))
+          ->setValorDesconto($this->rem(241, 253, $detalhe))
+          ->setValorRecebido($this->rem(254, 266, $detalhe))
+          ->setValorMora($this->rem(267, 279, $detalhe))
+          ->setValorMulta($this->rem(280, 292, $detalhe));
+        }
+
 
         $msgAdicional = str_split(sprintf('%08s', $this->rem(319, 328, $detalhe)), 2) + array_fill(0, 5, '');
         if ($d->hasOcorrencia('06', '15', '17')) {
@@ -217,7 +231,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
           ->setQuantidadeAbatimentosCancelados((int) $this->totais['abatimentosCancelados'])
           ->setQuantidadeAlterados((int) $this->totais['alterados']) // vencimentos alterados
           ->setQuantidadeAbatimentosConcedidos((int) $this->totais['abatimentosConcedidos'])
-          ->setQuantidadeConfirmacaoInstrucaoProtesto((int) $this->totais['ciProtestos'])
+          ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['ciProtestos'])
           ->setQuantidadeRateiosEfetuados((int) $this->totais['rateios']);
 
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
@@ -229,7 +243,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false))
             ->setValorAlterados(Util::nFloat($this->rem(143, 154, $trailer)/100, 2, false)) // vencimentos alterados
             ->setValorAbatimentosConcedidos(Util::nFloat($this->rem(160, 171, $trailer)/100, 2, false))
-            ->setValorConfirmacaoInstrucaoProtesto(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
+            ->setValorConfirmacaoInstrucaoProtestos(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
             ->setValorRateiosEfetuados(Util::nFloat($this->rem(363, 377, $trailer)/100, 2, false));
         } else {
           $totais->setValorTitulos($this->rem(26, 39, $trailer)) // titulos em cobranca
@@ -239,7 +253,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setValorAbatimentosCancelados($this->rem(126, 137, $trailer))
             ->setValorAlterados($this->rem(143, 154, $trailer)) // vencimentos alterados
             ->setValorAbatimentosConcedidos($this->rem(160, 171, $trailer))
-            ->setValorConfirmacaoInstrucaoProtesto($this->rem(177, 188, $trailer))
+            ->setValorConfirmacaoInstrucaoProtestos($this->rem(177, 188, $trailer))
             ->setValorRateiosEfetuados($this->rem(363, 377, $trailer));
         }
 

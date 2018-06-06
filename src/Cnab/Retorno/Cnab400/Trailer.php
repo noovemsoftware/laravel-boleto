@@ -87,12 +87,12 @@ class Trailer implements TrailerContract
     /**
      * @var int
      */
-    protected $quantidadeConfirmacaoInstrucaoProtesto = 0;
+    protected $quantidadeConfirmacaoInstrucaoProtestos = 0;
 
     /**
      * @var int
      */
-    protected $valorConfirmacaoInstrucaoProteso = 0;
+    protected $valorConfirmacaoInstrucaoProtestos = 0;
 
     /**
      * @var int
@@ -427,18 +427,18 @@ class Trailer implements TrailerContract
      *
      * @return Trailer
      */
-    public function setQuantidadeConfirmacaoInstrucaoProtesto($quantidade)
+    public function setQuantidadeConfirmacaoInstrucaoProtestos($quantidade)
     {
-      $this->quantidadeConfirmacaoInstrucaoProtesto = $quantidade;
+      $this->quantidadeConfirmacaoInstrucaoProtestos = $quantidade;
       return $this;
     }
 
     /**
      * @return int
      */
-    public function getQuantidadeConfirmacaoInstrucaoProtesto()
+    public function getQuantidadeConfirmacaoInstrucaoProtestos()
     {
-      return $this->quantidadeConfirmacaoInstrucaoProtesto;
+      return $this->quantidadeConfirmacaoInstrucaoProtestos;
     }
 
     /**
@@ -446,18 +446,18 @@ class Trailer implements TrailerContract
      *
      * @return Trailer
      */
-    public function setValorConfirmacaoInstrucaoProtesto($valor)
+    public function setValorConfirmacaoInstrucaoProtestos($valor)
     {
-      $this->valorConfirmacaoInstrucaoProtesto = $valor;
+      $this->valorConfirmacaoInstrucaoProtestos = $valor;
       return $this;
     }
 
     /**
      * @return int
      */
-    public function getValorConfirmacaoInstrucaoProteso()
+    public function getValorConfirmacaoInstrucaoProtestos()
     {
-      return $this->valorConfirmacaoInstrucaoProteso;
+      return $this->valorConfirmacaoInstrucaoProtestos;
     }
 
     /**
