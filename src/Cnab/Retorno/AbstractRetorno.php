@@ -63,6 +63,11 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
     protected $detalhe = [];
 
     /**
+     * @var bool
+     */
+    protected $usandoCentavos = false;
+
+    /**
      * Helper de totais.
      *
      * @var array
@@ -74,10 +79,7 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
      */
     private $_position = 1;
 
-    /**
-     * @var bool
-     */
-    private $usandoCentavos = false;
+
 
     /**
      *
