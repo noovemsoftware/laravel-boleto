@@ -75,6 +75,11 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
     private $_position = 1;
 
     /**
+     * @var bool
+     */
+    private $usandoCentavos = false;
+
+    /**
      *
      * @param String $file
      * @throws \Exception
@@ -180,6 +185,26 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
     public function getTotais()
     {
         return $this->totais;
+    }
+
+    /**
+     * @var bool $use
+     *
+     * @return AbstractRetorno
+     */
+    public function setUsandoCentavos($use)
+    {
+      $this->usandoCentavos = $use;
+      return $this;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function getUsandoCentavos()
+    {
+      return $this->usandoCentavos;
     }
 
     /**
