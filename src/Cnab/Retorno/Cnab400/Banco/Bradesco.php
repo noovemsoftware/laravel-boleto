@@ -226,7 +226,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setValorEntradas(Util::nFloat($this->rem(63, 74, $trailer)/100, 2, false))
             ->setValorLiquidados(Util::nFloat($this->rem(75, 86, $trailer)/100, 2, false))
             ->setValorBaixados(Util::nFloat($this->rem(109, 120, $trailer)/100, 2, false))
-            ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false));
+            ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false))
             ->setValorAlterados(Util::nFloat($this->rem(143, 154, $trailer)/100, 2, false)) // vencimentos alterados
             ->setValorAbatimentosConcedidos(Util::nFloat($this->rem(160, 171, $trailer)/100, 2, false))
             ->setValorConfirmacaoInstrucaoProtesto(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
