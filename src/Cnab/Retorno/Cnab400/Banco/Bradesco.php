@@ -109,7 +109,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             'alterados' => 0,
             'abatimentosConcedidos' => 0,
             'abatimentosCancelados' => 0,
-            'ciProtestados' => 0,
+            'ciProtestos' => 0,
             'rateios' => 0
         ];
     }
