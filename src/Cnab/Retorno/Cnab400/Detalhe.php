@@ -536,7 +536,7 @@ class Detalhe implements DetalheContract
      */
     public function setValorOutrasDespesas($valorOutrasDespesas)
     {
-      $this->valorOutrasDespesas = $valorOutrasDespesas
+      $this->valorOutrasDespesas = $valorOutrasDespesas;
       return $this;
     }
 
@@ -556,7 +556,7 @@ class Detalhe implements DetalheContract
      */
     public function setValorOutrasReceitas($valorOutrasReceitas)
     {
-      $this->valorOutrasReceitas = $valorOutrasReceitas
+      $this->valorOutrasReceitas = $valorOutrasReceitas;
       return $this;
     }
 
@@ -576,7 +576,7 @@ class Detalhe implements DetalheContract
      */
     public function setPagamentoCheque($pagamentoCheque)
     {
-      $this->pagamentoCheque = $pagamentoCheque
+      $this->pagamentoCheque = $pagamentoCheque;
       return $this;
     }
 
