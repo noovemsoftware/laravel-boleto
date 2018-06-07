@@ -78,14 +78,31 @@ class Detalhe implements DetalheContract
      * @var string
      */
     protected $valorMora;
+
     /**
      * @var string
      */
     protected $valorMulta;
+
+    /**
+     * @var string
+     */
+    protected $valorOutrasDespesas;
+
+    /**
+     * @var string
+     */
+    protected $valorOutrasReceitas;
+
     /**
      * @var string
      */
     protected $error;
+
+    /**
+     * @var string
+     */
+    protected $pagamentoCheque;
 
     /**
      * @return string
@@ -510,5 +527,65 @@ class Detalhe implements DetalheContract
         $this->error          = $error;
 
         return $this;
+    }
+
+    /**
+     * @param string $valorOutrasDespesas
+     *
+     * @return Detalhe
+     */
+    public function setValorOutrasDespesas($valorOutrasDespesas)
+    {
+      $this->valorOutrasDespesas = $valorOutrasDespesas
+      return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getValorOutrasDespesas()
+    {
+      return $this->valorOutrasDespesas;
+    }
+
+    /**
+     * @param string $valorOutrasReceitas
+     *
+     * @return Detalhe
+     */
+    public function setValorOutrasReceitas($valorOutrasReceitas)
+    {
+      $this->valorOutrasReceitas = $valorOutrasReceitas
+      return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getValorOutrasReceitas()
+    {
+      return $this->valorOutrasReceitas;
+    }
+
+    /**
+     * @param string $pagamentoCheque
+     *
+     * @return Detalhe
+     */
+    public function setPagamentoCheque($pagamentoCheque)
+    {
+      $this->pagamentoCheque = $pagamentoCheque
+      return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPagamentoCheque()
+    {
+      return $this->pagamentoCheque;
     }
 }
