@@ -141,7 +141,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
      */
     protected function processarDetalhe(array $detalhe)
     {
-        dd($detalhe);
+        //dd($detalhe);
         if ($this->count() == 1) {
             $this->getHeader()
                 ->setAgencia($this->rem(25, 29, $detalhe))
