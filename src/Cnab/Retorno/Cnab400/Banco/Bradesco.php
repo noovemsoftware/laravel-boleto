@@ -171,8 +171,8 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
           ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
           ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
           ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
-          ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
-          ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
+          ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false)) // bradesco usa juros e multa no mesmo campo
+          ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
 
         } else {
           $d->setValor($this->rem(153, 165, $detalhe))
@@ -182,8 +182,8 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
           ->setValorAbatimento($this->rem(228, 240, $detalhe))
           ->setValorDesconto($this->rem(241, 253, $detalhe))
           ->setValorRecebido($this->rem(254, 266, $detalhe))
-          ->setValorMora($this->rem(267, 279, $detalhe))
-          ->setValorMulta($this->rem(280, 292, $detalhe));
+          ->setValorMora($this->rem(267, 279, $detalhe)) // bradesco usa juros e multa no mesmo campo
+          ->setValorOutrasDespesas($this->rem(280, 292, $detalhe));
         }
 
 
