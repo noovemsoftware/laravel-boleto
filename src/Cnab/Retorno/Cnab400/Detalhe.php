@@ -105,6 +105,11 @@ class Detalhe implements DetalheContract
     protected $pagamentoCheque;
 
     /**
+     * @var string
+     */
+    protected $linhaRegistro;
+
+    /**
      * @return string
      */
     public function getCarteira()
@@ -524,7 +529,7 @@ class Detalhe implements DetalheContract
     public function setError($error)
     {
         $this->ocorrenciaTipo = self::OCORRENCIA_ERRO;
-        $this->error          = $error;
+        $this->error = $error;
 
         return $this;
     }
@@ -587,5 +592,25 @@ class Detalhe implements DetalheContract
     public function getPagamentoCheque()
     {
       return $this->pagamentoCheque;
+    }
+
+    /**
+     * @param string $linha
+     *
+     * @return Detalhe
+     */
+    public function setLinhaRegistro($linha)
+    {
+      $this->linhaRegistro = $linha;
+      return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLinhaRegistro()
+    {
+      return $this->linhaRegistro;
     }
 }
