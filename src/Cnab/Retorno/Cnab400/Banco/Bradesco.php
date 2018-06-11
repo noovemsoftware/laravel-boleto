@@ -183,7 +183,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
           ->setValorDesconto($this->rem(241, 253, $detalhe))
           ->setValorRecebido($this->rem(254, 266, $detalhe))
           ->setValorMora($this->rem(267, 279, $detalhe)) // bradesco usa juros e multa no mesmo campo
-          ->setValorOutrasDespesas($this->rem(280, 292, $detalhe));
+          ->setValorOutrasReceitas($this->rem(280, 292, $detalhe));
         }
 
 
