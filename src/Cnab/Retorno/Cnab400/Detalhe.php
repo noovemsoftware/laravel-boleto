@@ -102,7 +102,7 @@ class Detalhe implements DetalheContract
     /**
      * @var string
      */
-    protected $pagamentoCheque;
+    protected $bancoOrigemCheque;
 
     /**
      * @var string
@@ -575,13 +575,13 @@ class Detalhe implements DetalheContract
     }
 
     /**
-     * @param string $pagamentoCheque
+     * @param string $bancoOrigem
      *
      * @return Detalhe
      */
-    public function setPagamentoCheque($pagamentoCheque)
+    public function setBancoOrigemCheque($bancoOrigem)
     {
-      $this->pagamentoCheque = $pagamentoCheque;
+      $this->bancoOrigemCheque = $bancoOrigem;
       return $this;
     }
 
@@ -589,9 +589,9 @@ class Detalhe implements DetalheContract
      *
      * @return string
      */
-    public function getPagamentoCheque()
+    public function getBancoOrigemCheque()
     {
-      return $this->pagamentoCheque;
+      return $this->bancoOrigemCheque;
     }
 
     /**
