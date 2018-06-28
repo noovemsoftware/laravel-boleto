@@ -13,10 +13,15 @@ class LaravelBoletoServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+
+    // override standard boleto views
+    $this->loadViewsFrom(__DIR__.'/Boleto/Render/view/', 'laravelboleto');
+
     // publishes the views of boleto
     $this->publishes([
-      __DIR__.'/Boleto/Render/view/' => base_path('/resources/views/vendor/laravelboleto')
+      __DIR__.'/Boleto/Render/view/' => resource_path('/views/vendor/laravelboleto')
     ], 'views');
+    
   }
 
   /**
