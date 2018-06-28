@@ -15,7 +15,7 @@ class LaravelBoletoServiceProvider extends ServiceProvider
   {
     // publishes the views of boleto
     $this->publishes([
-      _DIR_.'/Boleto/Render/view/' => base_path('/resources/views/vendor/laravelboleto')
+      __DIR__.'/Boleto/Render/view/' => base_path('/resources/views/vendor/laravelboleto')
     ], 'views');
   }
 
