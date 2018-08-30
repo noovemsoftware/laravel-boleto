@@ -647,7 +647,8 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
-     * Retorna o campo Espécie Doc, geralmente DM (Duplicata Mercantil)
+     * Retorna o campo Espécie Doc
+     * utilizar apenas o CODIGO, nada de TEXTOS, pois vai na remessa
      *
      * @return string
      */
@@ -657,6 +658,8 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
+     * @deprecated
+     * não ha necessidade de verificarmos isto. o usuario do pacote deve saber se manda a abreviacao ou o codigo em si;
      * Retorna o codigo da Espécie Doc
      *
      * @param int $default
