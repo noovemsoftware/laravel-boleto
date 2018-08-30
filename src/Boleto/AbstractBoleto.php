@@ -648,7 +648,6 @@ abstract class AbstractBoleto implements BoletoContract
 
     /**
      * Retorna o campo Espécie Doc
-     * utilizar apenas o CODIGO, nada de TEXTOS, pois vai na remessa
      *
      * @return string
      */
@@ -658,8 +657,6 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
-     * @deprecated
-     * não ha necessidade de verificarmos isto. o usuario do pacote deve saber se manda a abreviacao ou o codigo em si;
      * Retorna o codigo da Espécie Doc
      *
      * @param int $default
@@ -668,9 +665,10 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getEspecieDocCodigo($default = 99)
     {
-        return key_exists(strtoupper($this->especieDoc), $this->especiesCodigo)
-            ? $this->especiesCodigo[strtoupper($this->getEspecieDoc())]
-            : $default;
+        if(in_array(strtoupper($this->especieDoc), $this->especiesCodigo)) {
+            return strtoupper($this->especieDoc);
+        }
+        return $default;
     }
 
     /**
