@@ -42,6 +42,15 @@ abstract class AbstractRemessa
     protected $codigoBanco;
 
     /**
+     * Ambiente de homologacao
+     * Alguns bancos alterarm o header da remessa
+     * quando em fase de testes
+     *
+     * @var boolean
+     */
+    protected $homologacao = false;
+    
+    /**
      * Contagem dos registros Detalhes
      *
      * @var int
@@ -147,6 +156,15 @@ abstract class AbstractRemessa
      */
     public function setDataRemessa($data){
         $this->dataRemessa = $data;
+    }
+
+    /**
+     * Seta homologacao
+     *
+     * @param $data
+     */
+    public function setHomologacao($hom){
+        $this->homologacao = $hom;
     }
 
     /**
