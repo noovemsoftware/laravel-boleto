@@ -68,7 +68,7 @@ class Caixa extends AbstractRemessa implements RemessaContract
      *
      * @var array
      */
-    protected $carteiras = ['RG'];
+    protected $carteiras = ['RG', '01'];
 
     /**
      * Codigo do cliente junto ao banco.
@@ -145,7 +145,7 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(40, 57, Util::formatCnab('9', $boleto->getNossoNumero(), 17));
         $this->add(58, 58, '1'); //'1' = Cobrança Simples
         $this->add(59, 59, '1'); // ‘1’ - Cobrança Registrada
-        $this->add(60, 60, '1'); //'2’ - Escritural
+        $this->add(60, 60, '2'); //'2’ - Escritural
         $this->add(61, 61, '2'); //‘2’ = Cliente Emite
         $this->add(62, 62, '0'); //‘0’ = Postagem pelo Beneficiário
         $this->add(63, 73, Util::formatCnab('9', $boleto->getNumero(), 11));
@@ -166,13 +166,13 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(166, 180, Util::formatCnab('9', 0, 15, 2));
         $this->add(181, 195, Util::formatCnab('9', 0, 15, 2));
         $this->add(196, 220, Util::formatCnab('X', $boleto->getNumeroControle(), 25));
-        $this->add(221, 221, self::PROTESTO_SEM);
+        $this->add(221, 221, self::PROTESTO_NAO_PROTESTAR);
         if ($boleto->getDiasProtesto() > 0) {
             $this->add(221, 221, self::PROTESTO_DIAS_UTEIS);
         }
         $this->add(222, 223, Util::formatCnab('9', $boleto->getDiasProtesto(), 2));
-        $this->add(224, 224, '2'); // '2' = Não Baixar / Não Devolver (NÃO TRATADO PELO BANCO)
-        $this->add(225, 227, '000');
+        $this->add(224, 224, '1'); // '1' = Baixar / Devolver
+        $this->add(225, 227, '000'); // ver aqui, pois deve passar dias quando baixa
         $this->add(228, 229, Util::formatCnab('9', $boleto->getMoeda(), 2));
         $this->add(230, 239, '0000000000');
         $this->add(240, 240, '');
@@ -259,7 +259,11 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(164, 166, '101');
         $this->add(167, 171, '00000');
         $this->add(172, 191, '');
-        $this->add(192, 211, '');
+        if ($this->homologacao) {
+            $this->add(192, 211, Util::formatCnab('X', 'REMESSA-TESTE', 20));
+        } else {
+            $this->add(192, 211, '');
+        }
         $this->add(212, 215, '');
         $this->add(216, 240, '');
         return $this;
