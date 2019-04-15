@@ -121,7 +121,11 @@ class Caixa  extends AbstractRemessa implements RemessaContract
 
         $this->add(1, 1, '0');
         $this->add(2, 2, '1');
-        $this->add(3, 9, 'REMESSA');
+        if ($this->homologacao) {
+            $this->add(3, 9, 'REM.TST');
+        } else {
+            $this->add(3, 9, 'REMESSA');
+        }
         $this->add(10, 11, '01');
         $this->add(12, 26, Util::formatCnab('X', 'COBRANCA', 15));
         $this->add(27, 30, Util::formatCnab('9', $this->getAgencia(), 4));
