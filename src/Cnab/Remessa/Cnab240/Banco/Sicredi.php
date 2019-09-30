@@ -33,7 +33,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     const OCORRENCIA_NAO_CONCEDER_DESCONTO = '17';
     const OCORRENCIA_ALT_OUTROS_DADOS = '31';
 
-    const PROTESTO_SEM = '0';
+    const PROTESTO_SEM = '3';
     const PROTESTO_DIAS_CORRIDOS = '1';
     const PROTESTO_NAO_PROTESTAR = '3';
     const PROTESTO_AUTOMATICO = '9';
@@ -42,7 +42,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     {
         parent::__construct($params);
         $this->setCarteira('A'); //Carteira Simples 'A'
-        $this->addCampoObrigatorio('codigoCliente', 'idremessa');
+        $this->addCampoObrigatorio('idremessa');
     }
 
     /**
@@ -67,26 +67,15 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     protected $codigoCliente;
 
     /**
-     * Retorna o codigo do cliente.
+     * Define o código da carteira (Com ou sem registro)
      *
-     * @return mixed
+     * @param string $carteira
+     *
+     * @return AbstractRemessa
      */
-    public function getCodigoCliente()
+    public function setCarteira($carteira)
     {
-        return $this->codigoCliente;
-    }
-
-    /**
-     * Seta o codigo do cliente.
-     *
-     * @param mixed $codigoCliente
-     *
-     * @return Sicredi
-     */
-    public function setCodigoCliente($codigoCliente)
-    {
-        $this->codigoCliente = $codigoCliente;
-
+        $this->carteira = 'A';
         return $this;
     }
 
@@ -134,13 +123,13 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(24, 35, Util::formatCnab('9', $this->getConta(), 12));
         $this->add(36, 36, Util::modulo11($this->getConta()));
         $this->add(37, 37, '');
-        $this->add(38, 57, Util::formatCnab('9', $boleto->getNossoNumero(), 20));
+        $this->add(38, 57, Util::formatCnab('X', $boleto->getNossoNumero(), 20));
         $this->add(58, 58, '1'); //'1' = Cobrança Simples
         $this->add(59, 59, '1'); //'1' = Com cadastramento (cobrança registrada)
         $this->add(60, 60, '1'); //'1' = Tradicional
         $this->add(61, 61, '2'); //'2' = Beneficiário emite
         $this->add(62, 62, '2'); //'2' = Beneficiário distribui
-        $this->add(63, 77, Util::formatCnab('9', $boleto->getNumero(), 15));
+        $this->add(63, 77, Util::formatCnab('9', $boleto->getNumeroDocumento(), 15));
         $this->add(78, 85, $boleto->getDataVencimento()->format('dmY'));
         $this->add(86, 100, Util::formatCnab('9', $boleto->getValor(), 15, 2));
         $this->add(101, 105, '00000');
@@ -192,6 +181,12 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         }
         if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO) {
             $this->add(16, 17, self::OCORRENCIA_ALT_OUTROS_DADOS);
+        }
+        if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO_DATA) {
+            $this->add(16, 17, self::OCORRENCIA_ALT_VENCIMENTO);
+        }
+        if ($boleto->getStatus() == $boleto::STATUS_CUSTOM) {
+            $this->add(16, 17, sprintf('%2.02s', $boleto->getComando()));
         }
         $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocumento())) == 14 ? 2 : 1);
         $this->add(19, 33, Util::formatCnab('9', Util::onlyNumbers($this->getBeneficiario()->getDocumento()), 15));
@@ -271,7 +266,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(9, 17, '');
         $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocumento())) == 14 ? 2 : 1);
         $this->add(19, 32, Util::formatCnab('9', Util::onlyNumbers($this->getBeneficiario()->getDocumento()), 14));
-        $this->add(33, 52, Util::formatCnab('9', Util::onlyNumbers($this->getCodigoCliente()), 20));
+        $this->add(33, 52, Util::formatCnab('X', '', 20));
         $this->add(53, 57, Util::formatCnab('9', $this->getAgencia(), 5));
         $this->add(58, 58, '');
         $this->add(59, 70, Util::formatCnab('9', $this->getConta(), 12));
@@ -315,7 +310,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(17, 17, '');
         $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocumento())) == 14 ? 2 : 1);
         $this->add(19, 33, Util::formatCnab('9', Util::onlyNumbers($this->getBeneficiario()->getDocumento()), 15));
-        $this->add(34, 53, Util::formatCnab('9', Util::onlyNumbers($this->getCodigoCliente()), 20));
+        $this->add(34, 53, Util::formatCnab('X', '', 20));
         $this->add(54, 58, Util::formatCnab('9', $this->getAgencia(), 5));
         $this->add(59, 59, '');
         $this->add(60, 71, Util::formatCnab('9', $this->getConta(), 12));
@@ -347,9 +342,9 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(4, 7, '0001');
         $this->add(8, 8, '5');
         $this->add(9, 17, '');
-        $this->add(18, 23, Util::formatCnab('9', count($this->boletos) + 2, 6));
-        $this->add(24, 29, Util::formatCnab('9', count($this->boletos), 6));
-        $this->add(30, 46, Util::formatCnab('9', $valor, 17, 2));
+        $this->add(18, 23, Util::formatCnab('9', $this->getCountDetalhes() + 2, 6));
+        $this->add(24, 29, Util::formatCnab('9', 0, 6));
+        $this->add(30, 46, Util::formatCnab('9', 0, 17, 2));
         $this->add(47, 52, Util::formatCnab('9', 0, 6));
         $this->add(53, 69, Util::formatCnab('9', 0, 17, 2));
         $this->add(70, 75, Util::formatCnab('9', 0, 6));
@@ -375,8 +370,8 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(8, 8, '9');
         $this->add(9, 17, '');
         $this->add(18, 23, Util::formatCnab('9', 1, 6));
-        $this->add(24, 29, Util::formatCnab('9', count($this->aRegistros) + 1, 6));
-        $this->add(30, 35, '000001');
+        $this->add(24, 29, Util::formatCnab('9', $this->getCount(), 6));
+        $this->add(30, 35, '000000');
         $this->add(36, 240, '');
 
         return $this;

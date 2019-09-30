@@ -82,7 +82,7 @@ final class Util
         '479' => 'Banco ItaúBank S.A',
         'M09' => 'Banco Itaucred Financiamentos S.A.',
         '376' => 'Banco J. P. Morgan S.A.',
-        '074' => 'Banco J. Safra S.A.',
+        '074' => 'Banco J. 074 S.A.',
         '217' => 'Banco John Deere S.A.',
         '600' => 'Banco Luso Brasileiro S.A.',
         '389' => 'Banco Mercantil do Brasil S.A.',
@@ -99,7 +99,7 @@ final class Util
         'M16' => 'Banco Rodobens S.A.',
         '072' => 'Banco Rural Mais S.A.',
         '453' => 'Banco Rural S.A.',
-        '422' => 'Banco Safra S.A.',
+        '422' => 'Banco 422 S.A.',
         '033' => 'Banco Santander (Brasil) S.A.',
         '749' => 'Banco Simples S.A.',
         '366' => 'Banco Société Générale Brasil S.A.',
@@ -315,9 +315,9 @@ final class Util
             'ñ' => 'n', 'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o',
             'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ŕ' => 'r', 'ÿ' => 'y',
 
-            'ß' => 'sz', 'þ' => 'thorn',
+            'ß' => 'sz', 'þ' => 'thorn', 'º' => '', 'ª' => '', '°' => '',
         );
-        return strtr($string, $normalizeChars);
+        return preg_replace('/[^0-9a-zA-Z !*\-$\(\)\[\]\{\},.;:\/\\#%&@+=]/', '', strtr($string, $normalizeChars));
     }
 
     /**
@@ -372,15 +372,12 @@ final class Util
             }
         }
         $formater->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
-        if (!$symbol) {
-            $pattern = preg_replace("/[¤]/", '', $formater->getPattern());
-            $formater->setPattern($pattern);
-        } else {
-            // ESPAÇO DEPOIS DO SIMBOLO
-            $pattern = str_replace("¤", "¤ ", $formater->getPattern());
-            $formater->setPattern($pattern);
+        $pattern = substr($formater->getPattern(), strpos($formater->getPattern(), '#'));
+        if ($symbol) {
+            $pattern = "¤ " . $pattern;
         }
-        return $formater->formatCurrency($number, $formater->getTextAttribute(\NumberFormatter::CURRENCY_CODE));
+        $formater->setPattern($pattern);
+        return trim($formater->formatCurrency($number, $formater->getTextAttribute(\NumberFormatter::CURRENCY_CODE)));
     }
 
     /**
@@ -474,6 +471,7 @@ final class Util
     public static function formatCnab($tipo, $valor, $tamanho, $dec = 0, $sFill = '')
     {
         $tipo = self::upper($tipo);
+        $valor = self::upper(self::normalizeChars($valor));
         if (in_array($tipo, array('9', 9, 'N', '9L', 'NL'))) {
             if ($tipo == '9L' || $tipo == 'NL') {
                 $valor = self::onlyNumbers($valor);
@@ -486,7 +484,6 @@ final class Util
         } elseif (in_array($tipo, array('A', 'X'))) {
             $left = '-';
             $type = 's';
-            $valor = self::upper(self::normalizeChars($valor));
         } else {
             throw new \Exception('Tipo inválido');
         }
@@ -544,7 +541,7 @@ final class Util
     {
         $sum = 0;
         for ($i = mb_strlen($n); $i > 0; $i--) {
-            $sum += mb_substr($n, $i - 1, 1)*$factor;
+            $sum += ((int) mb_substr($n, $i - 1, 1))*$factor;
             if ($factor == $base) {
                 $factor = 1;
             }
@@ -705,7 +702,7 @@ final class Util
             case Contracts\Boleto\Boleto::COD_BANCO_BB:
                 if (self::remove(1, 1, $detalhe) != 7) {
                     unset($retorno[$i]);
-                    continue;
+                    continue 2;
                 }
                 self::adiciona($retorno[$i], 1, 1, '7');
                 self::adiciona($retorno[$i], 64, 80, self::remove(64, 80, $detalhe));
