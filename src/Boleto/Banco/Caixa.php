@@ -112,11 +112,10 @@ class Caixa  extends AbstractBoleto implements BoletoContract
      * @return [type] [description]
      */
     public function getAgenciaCodigoBeneficiario(){
-        return $this->getAgencia() . ' / ' . 
-               $this->getCodigoCliente() . '-' . 
+        return $this->getAgencia() . ' / ' .
+               $this->getCodigoCliente() . '-' .
                Util::modulo11($this->getCodigoCliente());
     }
-    
     /**
      * Seta dias para baixa automática
      *

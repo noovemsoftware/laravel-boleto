@@ -5,6 +5,8 @@ namespace Eduardokum\LaravelBoleto\Boleto;
 use Carbon\Carbon;
 use Eduardokum\LaravelBoleto\Boleto\Render\Html;
 use Eduardokum\LaravelBoleto\Boleto\Render\Pdf;
+use Eduardokum\LaravelBoleto\Boleto\Render\PdfCaixa;
+use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
 use Eduardokum\LaravelBoleto\Contracts\Pessoa as PessoaContract;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Util;
@@ -303,6 +305,18 @@ abstract class AbstractBoleto implements BoletoContract
      * @var int
      */
     protected $status = BoletoContract::STATUS_REGISTRO;
+
+    /**
+     * @var int
+     */
+    private $status_custom = null;
+
+    /**
+     * Mostrar o endereço do beneficiário abaixo da razão e CNPJ na ficha de compensação
+     *
+     * @var boolean
+     */
+    protected $mostrarEnderecoFichaCompensacao = false;
 
     /**
      * Construtor
@@ -660,15 +674,22 @@ abstract class AbstractBoleto implements BoletoContract
      * Retorna o codigo da Espécie Doc
      *
      * @param int $default
+     * @param int $tipo
      *
      * @return string
      */
-    public function getEspecieDocCodigo($default = 99)
+    public function getEspecieDocCodigo($default = 99, $tipo = 240)
     {
-        if(in_array(strtoupper($this->especieDoc), $this->especiesCodigo)) {
-            return strtoupper($this->especieDoc);
+        if (property_exists($this, 'especiesCodigo240') && $tipo == 240) {
+            $especie = $this->especiesCodigo240;
+        } elseif(property_exists($this, 'especiesCodigo400') && $tipo == 400) {
+            $especie = $this->especiesCodigo400;
+        } else {
+            $especie = $this->especiesCodigo;
         }
-        return $default;
+        return key_exists(strtoupper($this->especieDoc), $especie)
+            ? $especie[strtoupper($this->getEspecieDoc())]
+            : $default;
     }
 
     /**
@@ -1174,7 +1195,7 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getMoraDia()
     {
-        if (!$this->getJuros() > 0) {
+        if ($this->getJuros() <= 0) {
            return 0;
         }
 
@@ -1330,6 +1351,39 @@ abstract class AbstractBoleto implements BoletoContract
         $this->status = BoletoContract::STATUS_ALTERACAO;
 
         return $this;
+    }
+
+    /**
+     * Marca o boleto para alterar data vecimento no banco
+     *
+     * @return AbstractBoleto
+     */
+    public function alterarDataDeVencimento()
+    {
+        $this->status = BoletoContract::STATUS_ALTERACAO_DATA;
+
+        return $this;
+    }
+
+    /**
+     * Comandar instrução custom
+     *
+     * @return AbstractBoleto
+     */
+    public function comandarInstrucao($instrucao)
+    {
+        $this->status = BoletoContract::STATUS_CUSTOM;
+        $this->status_custom = $instrucao;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getComando()
+    {
+        return $this->status == Boleto::STATUS_CUSTOM ? $this->status_custom : null;
     }
 
     /**
@@ -1524,6 +1578,26 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
+     * Retorna se a segunda linha contendo o endereço do beneficiário deve ser exibida na ficha de compensação
+     *
+     * @return bool
+     */
+    public function getMostrarEnderecoFichaCompensacao()
+    {
+        return $this->mostrarEnderecoFichaCompensacao;
+    }
+
+    /**
+     * Seta se a segunda linha contendo o endereço do beneficiário deve ser exibida na ficha de compensação
+     *
+     * @param bool $mostrarEnderecoFichaCompensacao
+     */
+    public function setMostrarEnderecoFichaCompensacao($mostrarEnderecoFichaCompensacao)
+    {
+        $this->mostrarEnderecoFichaCompensacao = $mostrarEnderecoFichaCompensacao;
+    }
+
+    /**
      * Render PDF
      *
      * @param bool $print
@@ -1532,9 +1606,13 @@ abstract class AbstractBoleto implements BoletoContract
      * @return string
      * @throws \Exception
      */
-    public function renderPDF($print = false, $instrucoes = true)
+     public function renderPDF($print = false, $instrucoes = true)
     {
-        $pdf = new Pdf();
+        if($this->codigoBanco == 104){
+           $pdf = new PdfCaixa();
+        }else{
+           $pdf = new Pdf();
+        }
         $pdf->addBoleto($this);
         !$print || $pdf->showPrint();
         $instrucoes || $pdf->hideInstrucoes();
@@ -1602,11 +1680,13 @@ abstract class AbstractBoleto implements BoletoContract
                     'documento' => $this->getBeneficiario()->getDocumento(),
                     'nome_documento' => $this->getBeneficiario()->getNomeDocumento(),
                     'endereco2' => $this->getBeneficiario()->getCepCidadeUf(),
+                    'endereco_completo' => $this->getBeneficiario()->getEnderecoCompleto(),
                 ],
                 'logo_base64' => $this->getLogoBase64(),
                 'logo' => $this->getLogo(),
                 'logo_banco_base64' => $this->getLogoBancoBase64(),
                 'logo_banco' => $this->getLogoBanco(),
+                'codigo_banco' => $this->getCodigoBanco(),
                 'codigo_banco_com_dv' => $this->getCodigoBancoComDv(),
                 'especie' => 'R$',
                 'data_vencimento' => $this->getDataVencimento(),
@@ -1631,6 +1711,7 @@ abstract class AbstractBoleto implements BoletoContract
                         'documento' => $this->getSacadorAvalista()->getDocumento(),
                         'nome_documento' => $this->getSacadorAvalista()->getNomeDocumento(),
                         'endereco2' => $this->getSacadorAvalista()->getCepCidadeUf(),
+						'endereco_completo' => $this->getSacadorAvalista()->getEnderecoCompleto(),
                     ]
                         : [],
                 'pagador' => [
@@ -1643,6 +1724,7 @@ abstract class AbstractBoleto implements BoletoContract
                     'documento' => $this->getPagador()->getDocumento(),
                     'nome_documento' => $this->getPagador()->getNomeDocumento(),
                     'endereco2' => $this->getPagador()->getCepCidadeUf(),
+					'endereco_completo' => $this->getPagador()->getEnderecoCompleto(),
                 ],
                 'demonstrativo' => $this->getDescricaoDemonstrativo(),
                 'instrucoes' => $this->getInstrucoes(),
@@ -1661,6 +1743,7 @@ abstract class AbstractBoleto implements BoletoContract
                 'carteira_nome' => $this->getCarteiraNome(),
                 'uso_banco' => $this->getUsoBanco(),
                 'status' => $this->getStatus(),
+                'mostrar_endereco_ficha_compensacao' => $this->getMostrarEnderecoFichaCompensacao()
             ], $this->variaveis_adicionais
         );
     }
