@@ -6,7 +6,7 @@ use Eduardokum\LaravelBoleto\CalculoDV;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Util;
 
-class Santander  extends AbstractBoleto implements BoletoContract
+class Santander extends AbstractBoleto implements BoletoContract
 {
     public function __construct(array $params = [])
     {
@@ -20,12 +20,14 @@ class Santander  extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco = self::COD_BANCO_SANTANDER;
+
     /**
      * Define as carteiras disponíveis para este banco
      *
      * @var array
      */
-    protected $carteiras = ['101', '201'];
+    protected $carteiras = ['101', '102', '201', '1', '3', '5', '6', '7'];
+
     /**
      * Espécie do documento, coódigo para remessa
      *
@@ -35,22 +37,36 @@ class Santander  extends AbstractBoleto implements BoletoContract
         'DM' => '01',
         'NP' => '02',
         'NS' => '03',
-        'REC' => '05',
+        'RC' => '05',
         'DS' => '06',
         'LC' => '07',
+        'BDP' => '08',
+        'BCC' => '19',
     ];
+
     /**
      * Define os nomes das carteiras para exibição no boleto
      *
      * @var array
      */
-    protected $carteirasNomes = ['101' => 'Cobrança Simples ECR', '102' => 'Cobrança Simples CSR', '201' => 'Penhor'];
+    protected $carteirasNomes = [
+        '101' => 'Cobrança Simples ECR',
+        '102' => 'Cobrança Simples CSR',
+        '201' => 'Penhor',
+        '1' => 'Eletrônica com Registro',
+        '3' => 'Penhor Eletrônica',
+        '5' => 'Rápida com Registro',
+        '6' => 'Penhor Rápida',
+        '7' => 'Desconto Eletrônico'
+    ];
+
     /**
      * Define o valor do IOS - Seguradoras (Se 7% informar 7. Limitado a 9%) - Demais clientes usar 0 (zero)
      *
      * @var int
      */
     protected $ios = 0;
+
     /**
      * Variaveis adicionais.
      *
@@ -104,26 +120,6 @@ class Santander  extends AbstractBoleto implements BoletoContract
         return $this;
     }
 
-    /**
-     * Define o código da carteira (Com ou sem registro)
-     *
-     * @param  string $carteira
-     * @return AbstractBoleto
-     * @throws \Exception
-     */
-    public function setCarteira($carteira)
-    {
-        switch ($carteira) {
-        case '1':
-        case '5':
-            $carteira = '101';
-            break;
-        case '4':
-            $carteira = '102';
-            break;
-        }
-        return parent::setCarteira($carteira);
-    }
     /**
      * Define o valor do IOS
      *
@@ -197,7 +193,8 @@ class Santander  extends AbstractBoleto implements BoletoContract
      *
      * @return array
      */
-    public static function parseCampoLivre($campoLivre) {
+    public static function parseCampoLivre($campoLivre)
+    {
         return [
             'convenio' => null,
             'agencia' => null,

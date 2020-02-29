@@ -665,7 +665,7 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getEspecieDocCodigo($default = 99)
     {
-        if(in_array(strtoupper($this->especieDoc), $this->especiesCodigo)) {
+        if (in_array(strtoupper($this->especieDoc), $this->especiesCodigo)) {
             return strtoupper($this->especieDoc);
         }
         return $default;
@@ -862,10 +862,11 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getInstrucoesImpressao()
     {
-        if (!empty($this->instrucoes_impressao))
+        if (!empty($this->instrucoes_impressao)) {
             return array_slice((array)$this->instrucoes_impressao + [null, null, null, null, null], 0, 5);
-        else
+        } else {
             return [];
+        }
     }
 
     /**
@@ -1019,13 +1020,13 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setValor($valor)
     {
-      if (!$this->valorEmCentavos){
-        $this->valor = Util::nFloat($valor, 2, false);
-      } else {
-        $this->valor = $valor;
-      }
+        if (!$this->valorEmCentavos) {
+            $this->valor = Util::nFloat($valor, 2, false);
+        } else {
+            $this->valor = $valor;
+        }
 
-      return $this;
+        return $this;
     }
 
     /**
@@ -1035,11 +1036,11 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getValor()
     {
-      if (!$this->valorEmCentavos) {
-        return Util::nFloat($this->valor, 2, false);
-      } else {
-        return $this->valor;
-      }
+        if (!$this->valorEmCentavos) {
+            return Util::nFloat($this->valor, 2, false);
+        } else {
+            return $this->valor;
+        }
     }
 
 
@@ -1123,10 +1124,10 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setJuros($juros)
     {
-        if(!$this->jurosEmCentavos) {
-          $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
+        if (!$this->jurosEmCentavos) {
+            $this->juros = (float)($juros > 0.00 ? $juros : 0.00);
         } else {
-          $this->juros = $juros > 0 ? $juros : 0;
+            $this->juros = $juros > 0 ? $juros : 0;
         }
         return $this;
     }
@@ -1150,8 +1151,8 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setJurosEmPercentual($is)
     {
-      $this->jurosEmPercentual = $is;
-      return $this;
+        $this->jurosEmPercentual = $is;
+        return $this;
     }
 
     /**
@@ -1163,8 +1164,8 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function setJurosEmCentavos($is)
     {
-      $this->jurosEmCentavos = $is;
-      return $this;
+        $this->jurosEmCentavos = $is;
+        return $this;
     }
 
     /**
@@ -1175,13 +1176,13 @@ abstract class AbstractBoleto implements BoletoContract
     public function getMoraDia()
     {
         if (!$this->getJuros() > 0) {
-           return 0;
+            return 0;
         }
 
-        if($this->jurosEmPercentual){
-          return Util::percent($this->getValor(), $this->getJuros())/30;
+        if ($this->jurosEmPercentual) {
+            return Util::percent($this->getValor(), $this->getJuros()) / 30;
         } else {
-          return $this->getJuros();
+            return $this->getJuros();
         }
     }
 
@@ -1351,8 +1352,10 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getLogoBancoBase64()
     {
-        return 'data:image/' . pathinfo($this->getLogoBanco(),
-                PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($this->getLogoBanco()));
+        return 'data:image/' . pathinfo(
+            $this->getLogoBanco(),
+            PATHINFO_EXTENSION
+        ) . ';base64,' . base64_encode(file_get_contents($this->getLogoBanco()));
     }
 
     /**
@@ -1572,7 +1575,7 @@ abstract class AbstractBoleto implements BoletoContract
     /**
      * On clone clean variables
      */
-    function __clone()
+    public function __clone()
     {
         $this->campoLivre = null;
         $this->campoNossoNumero = null;
@@ -1622,16 +1625,16 @@ abstract class AbstractBoleto implements BoletoContract
                 'sacador_avalista' =>
                     $this->getSacadorAvalista()
                         ? [
-                        'nome' => $this->getSacadorAvalista()->getNome(),
-                        'endereco' => $this->getSacadorAvalista()->getEndereco(),
-                        'bairro' => $this->getSacadorAvalista()->getBairro(),
-                        'cep' => $this->getSacadorAvalista()->getCep(),
-                        'uf' => $this->getSacadorAvalista()->getUf(),
-                        'cidade' => $this->getSacadorAvalista()->getCidade(),
-                        'documento' => $this->getSacadorAvalista()->getDocumento(),
-                        'nome_documento' => $this->getSacadorAvalista()->getNomeDocumento(),
-                        'endereco2' => $this->getSacadorAvalista()->getCepCidadeUf(),
-                    ]
+                            'nome' => $this->getSacadorAvalista()->getNome(),
+                            'endereco' => $this->getSacadorAvalista()->getEndereco(),
+                            'bairro' => $this->getSacadorAvalista()->getBairro(),
+                            'cep' => $this->getSacadorAvalista()->getCep(),
+                            'uf' => $this->getSacadorAvalista()->getUf(),
+                            'cidade' => $this->getSacadorAvalista()->getCidade(),
+                            'documento' => $this->getSacadorAvalista()->getDocumento(),
+                            'nome_documento' => $this->getSacadorAvalista()->getNomeDocumento(),
+                            'endereco2' => $this->getSacadorAvalista()->getCepCidadeUf(),
+                        ]
                         : [],
                 'pagador' => [
                     'nome' => $this->getPagador()->getNome(),
@@ -1661,7 +1664,8 @@ abstract class AbstractBoleto implements BoletoContract
                 'carteira_nome' => $this->getCarteiraNome(),
                 'uso_banco' => $this->getUsoBanco(),
                 'status' => $this->getStatus(),
-            ], $this->variaveis_adicionais
+            ],
+            $this->variaveis_adicionais
         );
     }
 }

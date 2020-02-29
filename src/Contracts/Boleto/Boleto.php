@@ -257,5 +257,5 @@ interface Boleto
      *
      * @return array
      */
-    static public function parseCampoLivre($campoLivre);
+    public static function parseCampoLivre($campoLivre);
 }
