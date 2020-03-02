@@ -153,6 +153,18 @@ abstract class AbstractBoleto implements BoletoContract
      */
     protected $especiesCodigo = [];
     /**
+     * Espécie do documento, coódigo para remessa
+     *
+     * @var array
+     */
+    protected $especiesCodigo240 = [];
+    /**
+     * Espécie do documento, coódigo para remessa
+     *
+     * @var array
+     */
+    protected $especiesCodigo400 = [];
+    /**
      * Número do documento
      *
      * @var int
@@ -319,9 +331,11 @@ abstract class AbstractBoleto implements BoletoContract
     protected $mostrarEnderecoFichaCompensacao = false;
 
     /**
-     * Construtor
+     * AbstractBoleto constructor.
      *
-     * @param array $params Parâmetros iniciais para construção do objeto
+     * @param array $params
+     *
+     * @throws \Exception
      */
     public function __construct($params = [])
     {
@@ -680,9 +694,9 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getEspecieDocCodigo($default = 99, $tipo = 240)
     {
-        if (property_exists($this, 'especiesCodigo240') && $tipo == 240) {
+        if (!empty($this->especiesCodigo240) && $tipo == 240) {
             $especie = $this->especiesCodigo240;
-        } elseif(property_exists($this, 'especiesCodigo400') && $tipo == 400) {
+        } elseif(!empty($this->especiesCodigo400) && $tipo == 400) {
             $especie = $this->especiesCodigo400;
         } else {
             $especie = $this->especiesCodigo;
@@ -1266,8 +1280,6 @@ abstract class AbstractBoleto implements BoletoContract
      * Seta dias para baixa automática
      *
      * @param int $baixaAutomatica
-     *
-     * @return AbstractBoleto
      * @throws \Exception
      */
     public function setDiasBaixaAutomatica($baixaAutomatica)
@@ -1368,6 +1380,8 @@ abstract class AbstractBoleto implements BoletoContract
     /**
      * Comandar instrução custom
      *
+     * @param $instrucao
+     *
      * @return AbstractBoleto
      */
     public function comandarInstrucao($instrucao)
@@ -1458,6 +1472,8 @@ abstract class AbstractBoleto implements BoletoContract
 
     /**
      * Método que valida se o banco tem todos os campos obrigadotorios preenchidos
+     *
+     * @param $messages
      *
      * @return boolean
      */
