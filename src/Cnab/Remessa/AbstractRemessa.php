@@ -8,7 +8,6 @@ use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 
 abstract class AbstractRemessa
 {
-
     const HEADER = 'header';
     const HEADER_LOTE = 'header_lote';
     const DETALHE = 'detalhe';
@@ -49,7 +48,7 @@ abstract class AbstractRemessa
      * @var boolean
      */
     protected $homologacao = false;
-    
+
     /**
      * Contagem dos registros Detalhes
      *
@@ -140,6 +139,13 @@ abstract class AbstractRemessa
     protected $beneficiario;
 
     /**
+     * usar de centavos nos valores monetarios
+     *
+     * @var bool
+     */
+    protected $usandoCentavos = false;
+
+    /**
      * Construtor
      *
      * @param array $params Parâmetros iniciais para construção do objeto
@@ -154,7 +160,8 @@ abstract class AbstractRemessa
      *
      * @param $data
      */
-    public function setDataRemessa($data){
+    public function setDataRemessa($data)
+    {
         $this->dataRemessa = $data;
     }
 
@@ -163,7 +170,8 @@ abstract class AbstractRemessa
      *
      * @param $data
      */
-    public function setHomologacao($hom){
+    public function setHomologacao($hom)
+    {
         $this->homologacao = $hom;
     }
 
@@ -174,8 +182,9 @@ abstract class AbstractRemessa
      *
      * @return string;
      */
-    public function getDataRemessa($format){
-        if(is_null($this->dataRemessa)){
+    public function getDataRemessa($format)
+    {
+        if (is_null($this->dataRemessa)) {
             return Carbon::now()->format($format);
         }
         return $this->dataRemessa->format($format);
@@ -354,6 +363,19 @@ abstract class AbstractRemessa
     }
 
     /**
+     * seta o uso de centavos
+     *
+     * @var bool
+     * @return Bradesco
+     */
+    public function setUsandoCentavos($use)
+    {
+        $this->usandoCentavos = $use;
+
+        return $this;
+    }
+
+    /**
      * Retorna o código da carteira (Com ou sem registro)
      *
      * @return string
@@ -381,6 +403,16 @@ abstract class AbstractRemessa
     public function getCarteiras()
     {
         return $this->carteiras;
+    }
+
+    /**
+     * retorna o uso de centavos
+     *
+     * @return bool
+     */
+    public function getUsandoCentavos()
+    {
+        return $this->usandoCentavos;
     }
 
     /**

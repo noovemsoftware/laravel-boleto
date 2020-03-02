@@ -21,12 +21,14 @@ class Santander extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco = self::COD_BANCO_SANTANDER;
+
     /**
      * Define as carteiras disponíveis para este banco
      *
      * @var array
      */
-    protected $carteiras = ['101', '201'];
+    protected $carteiras = ['101', '102', '201', '1', '3', '5', '6', '7'];
+
     /**
      * Espécie do documento, código para remessa 240
      *
@@ -51,15 +53,16 @@ class Santander extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $especiesCodigo400 = [
-        'DM'  => '01',
-        'NP'  => '02',
-        'AP'  => '03',
-        'RC'  => '05',
-        'DP'  => '06',
-        'LC'  => '07',
+        'DM' => '01',
+        'NP' => '02',
+        'NS' => '03',
+        'RC' => '05',
+        'DS' => '06',
+        'LC' => '07',
         'BDP' => '08',
         'BCC' => '19',
     ];
+
     /**
      * Mostrar o endereço do beneficiário abaixo da razão e CNPJ na ficha de compensação
      *
@@ -74,14 +77,21 @@ class Santander extends AbstractBoleto implements BoletoContract
     protected $carteirasNomes = [
         '101' => 'Cobrança Simples ECR',
         '102' => 'Cobrança Simples CSR',
-        '201' => 'Penhor'
+        '201' => 'Penhor',
+        '1' => 'Eletrônica com Registro',
+        '3' => 'Penhor Eletrônica',
+        '5' => 'Rápida com Registro',
+        '6' => 'Penhor Rápida',
+        '7' => 'Desconto Eletrônico'
     ];
+
     /**
      * Define o valor do IOS - Seguradoras (Se 7% informar 7. Limitado a 9%) - Demais clientes usar 0 (zero)
      *
      * @var int
      */
     protected $ios = 0;
+
     /**
      * Variaveis adicionais.
      *
@@ -154,27 +164,6 @@ class Santander extends AbstractBoleto implements BoletoContract
         $this->codigoCliente = $codigoCliente;
 
         return $this;
-    }
-
-    /**
-     * Define o código da carteira (Com ou sem registro)
-     *
-     * @param string $carteira
-     * @return AbstractBoleto
-     * @throws \Exception
-     */
-    public function setCarteira($carteira)
-    {
-        switch ($carteira) {
-            case '1':
-            case '5':
-                $carteira = '101';
-                break;
-            case '4':
-                $carteira = '102';
-                break;
-        }
-        return parent::setCarteira($carteira);
     }
 
     /**

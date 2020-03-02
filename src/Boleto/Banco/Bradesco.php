@@ -7,7 +7,7 @@ use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
 use Eduardokum\LaravelBoleto\Util;
 
-class Bradesco  extends AbstractBoleto implements BoletoContract
+class Bradesco extends AbstractBoleto implements BoletoContract
 {
     /**
      * Código do banco
@@ -150,7 +150,8 @@ class Bradesco  extends AbstractBoleto implements BoletoContract
      *
      * @return array
      */
-    public static function parseCampoLivre($campoLivre) {
+    public static function parseCampoLivre($campoLivre)
+    {
         return [
             'convenio' => null,
             'agenciaDv' => null,

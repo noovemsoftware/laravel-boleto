@@ -89,35 +89,6 @@ class Bradesco extends AbstractRemessa implements RemessaContract
     protected $fimArquivo = "\r\n";
 
     /**
-     * garante o uso de centavos
-     *
-     * @var bool
-     */
-    protected $usandoCentavos = false;
-
-    /**
-     * seta o uso de centavos
-     *
-     * @var bool
-     * @return Bradesco
-     */
-    public function setUsandoCentavos($use)
-    {
-      $this->usandoCentavos = $use;
-      return $this;
-    }
-
-    /**
-     * retorna o uso de centavos
-     *
-     * @return bool
-     */
-     public function getUsandoCentavos()
-     {
-       return $this->usandoCentavos;
-     }
-
-    /**
      * Codigo do cliente junto ao banco.
      *
      * @var string
@@ -232,13 +203,11 @@ class Bradesco extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-
         if (!$this->usandoCentavos) {
-          $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
         } else {
-          $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
         }
-
         $this->add(140, 142, '000');
         $this->add(143, 147, '00000');
         $this->add(148, 149, $boleto->getEspecieDocCodigo());
@@ -253,15 +222,17 @@ class Bradesco extends AbstractRemessa implements RemessaContract
             $this->add(157, 158, self::INSTRUCAO_DEVOLVER_XX);
             $this->add(159, 160, Util::formatCnab('9', $boleto->getDiasBaixaAutomatica(), 2));
         }
-
         if (!$this->usandoCentavos) {
-          $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
         } else {
-          $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
         }
-
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+        } else {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
         $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '02' : '01');
