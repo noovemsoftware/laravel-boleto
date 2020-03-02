@@ -368,9 +368,12 @@ class Santander extends AbstractRetorno implements RetornoCnab400
             $grupoErro = $this->rem(135, 136, $detalhe);
             $errorsRetorno = str_split(sprintf('%09s', $this->rem(137, 145, $detalhe)), 3) + array_fill(0, 3, '');
             $error = [];
-            $error[] = Arr::get($this->rejeicoes, $grupoErro . $errorsRetorno[0], '');
-            $error[] = Arr::get($this->rejeicoes, $grupoErro . $errorsRetorno[1], '');
-            $error[] = Arr::get($this->rejeicoes, $grupoErro . $errorsRetorno[2], '');
+            for ($i = 1; $i <= 3; $i++) {
+                $str = Arr::get($this->rejeicoes, $grupoErro . $errorsRetorno[$i], '');
+                if (strlen($str) > 0) {
+                    $error[] = $str;
+                }
+            }
             $d->setError(implode(PHP_EOL, $error));
         } else {
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);

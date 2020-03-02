@@ -15,6 +15,7 @@ class Bradesco extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco = Boleto::COD_BANCO_BRADESCO;
+
     /**
      * Define as carteiras disponíveis para este banco
      * '02' => Com registro | '09' => Com registro | '06' => Sem Registro | '21' => Com Registro - Pagável somente no Bradesco | '22' => Sem Registro - Pagável somente no Bradesco | '25' => Sem Registro - Emissão na Internet | '26' => Com Registro - Emissão na Internet
@@ -22,6 +23,7 @@ class Bradesco extends AbstractBoleto implements BoletoContract
      * @var array
      */
     protected $carteiras = ['02', '04', '09', '21', '26'];
+
     /**
      * Trata-se de código utilizado para identificar mensagens especificas ao cedente, sendo
      * que o mesmo consta no cadastro do Banco, quando não houver código cadastrado preencher
@@ -30,6 +32,7 @@ class Bradesco extends AbstractBoleto implements BoletoContract
      * @var int
      */
     protected $cip = '000';
+
     /**
      * Variaveis adicionais.
      *
@@ -39,6 +42,7 @@ class Bradesco extends AbstractBoleto implements BoletoContract
         'cip' => '000',
         'mostra_cip' => true,
     ];
+
     /**
      * Espécie do documento, coódigo para remessa
      *
@@ -79,12 +83,14 @@ class Bradesco extends AbstractBoleto implements BoletoContract
         'BDP' => '32', //BDP - Boleto de Proposta
         'O'   => '99', //Outros,
     ];
+
     /**
      * Mostrar o endereço do beneficiário abaixo da razão e CNPJ na ficha de compensação
      *
      * @var boolean
      */
     protected $mostrarEnderecoFichaCompensacao = true;
+
     /**
      * Gera o Nosso Número.
      *
@@ -123,6 +129,7 @@ class Bradesco extends AbstractBoleto implements BoletoContract
     {
         return Util::numberFormatGeral($this->getCarteira(), 2) . ' / ' .  substr_replace($this->getNossoNumero(), '-', -1, 0);
     }
+
     /**
      * Método para gerar o código da posição de 20 a 44
      *

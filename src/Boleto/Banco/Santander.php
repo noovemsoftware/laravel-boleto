@@ -69,6 +69,7 @@ class Santander extends AbstractBoleto implements BoletoContract
      * @var boolean
      */
     protected $mostrarEnderecoFichaCompensacao = true;
+
     /**
      * Define os nomes das carteiras para exibição no boleto
      *
@@ -119,27 +120,6 @@ class Santander extends AbstractBoleto implements BoletoContract
         $codigoCliente = $this->getCodigoCliente();
 
         return $agencia . ' / ' . $codigoCliente;
-    }
-
-    /**
-     * Retorna o código da carteira
-     * @return string
-     */
-    public function getCarteiraNumero()
-    {
-        switch ($this->carteira) {
-            case '101':
-                $carteira = '5';
-                break;
-            case '201':
-                $carteira = '1';
-                break;
-            default:
-                $carteira = $this->carteira;
-                break;
-        }
-
-        return $carteira;
     }
 
     /**
