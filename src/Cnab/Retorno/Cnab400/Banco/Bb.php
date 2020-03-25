@@ -223,7 +223,8 @@ class Bb extends AbstractRetorno implements RetornoCnab400
             ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
             ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
             ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
-            ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
+            ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false))
+            ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
         if ($d->hasOcorrencia('05', '06', '07', '08', '15')) {
             $this->totais['liquidados']++;

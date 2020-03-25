@@ -54,7 +54,7 @@ class Santander extends AbstractRemessa implements RemessaContract
      *
      * @var array
      */
-    protected $carteiras = [101, 102, 201, 1, 3, 5, 6, 7];
+    protected $carteiras = [1, 3, 5, 6, 7];
 
     /**
      * Caracter de fim de linha
@@ -179,7 +179,7 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(85, 97, Util::formatCnab('9', 0, 13, 2));
         $this->add(98, 101, '');
         $this->add(102, 107, $boleto->getJurosApos() === false ? '000000' : $boleto->getDataVencimento()->copy()->addDays($boleto->getJurosApos())->format('dmy'));
-        $this->add(108, 108, $this->getCarteiraNumero() > 200 ? '1' : '5');
+        $this->add(108, 108, $this->getCarteiraNumero());
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
         if ($boleto->getStatus() == $boleto::STATUS_BAIXA) {
             $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
