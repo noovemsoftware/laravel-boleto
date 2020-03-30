@@ -27,7 +27,7 @@ class Santander extends AbstractBoleto implements BoletoContract
      *
      * @var array
      */
-    protected $carteiras = ['101', '102', '201', '1', '3', '5', '6', '7'];
+    protected $carteiras = ['101', '104', '201', '204'];
 
     /**
      * Espécie do documento, código para remessa 240
@@ -76,14 +76,10 @@ class Santander extends AbstractBoleto implements BoletoContract
      * @var array
      */
     protected $carteirasNomes = [
-        '101' => 'Cobrança Simples ECR',
-        '102' => 'Cobrança Simples CSR',
-        '201' => 'Penhor',
-        '1' => 'Eletrônica com Registro',
-        '3' => 'Penhor Eletrônica',
-        '5' => 'Rápida com Registro',
-        '6' => 'Penhor Rápida',
-        '7' => 'Desconto Eletrônico'
+        '101' => 'COBRANÇA SIMPLES RCR',
+        '104' => 'COBRANÇA SIMPLES ECR',
+        '201' => 'COBRANÇA PENHOR RCR',
+        '204' => 'COBRANÇA PENHOR ECR'
     ];
 
     /**
@@ -120,6 +116,60 @@ class Santander extends AbstractBoleto implements BoletoContract
         $codigoCliente = $this->getCodigoCliente();
 
         return $agencia . ' / ' . $codigoCliente;
+    }
+
+    /**
+     * Retorna o código da carteira
+     * @return string
+     */
+    public function getCarteiraNumero()
+    {
+        switch ($this->carteira) {
+            case '101':
+                $carteira = '5';
+                break;
+            case '104':
+                $carteira = '1';
+                break;
+            case '201':
+                $carteira = '6';
+                break;
+            case '204':
+                $carteira = '3';
+                break;
+            default:
+                $carteira = $this->carteira;
+                break;
+        }
+
+        return $carteira;
+    }
+
+    /**
+     * Define o código da carteira
+     *
+     * @param string $carteira
+     * @return AbstractBoleto
+     * @throws \Exception
+     */
+    public function setCarteira($carteira)
+    {
+        switch ($carteira) {
+            case '1':
+                $carteira = '104';
+                break;
+            case '3':
+                $carteira = '204';
+                break;
+            case '5':
+                $carteira = '101';
+                break;
+            case '6':
+                $carteira = '201';
+                break;
+        }
+
+        return parent::setCarteira($carteira);
     }
 
     /**
