@@ -59,6 +59,7 @@ class Bb extends AbstractRemessa implements RemessaContract
     const INSTRUCAO_PROTESTAR_VENC_04 = '04';
     const INSTRUCAO_PROTESTAR_VENC_05 = '05';
     const INSTRUCAO_PROTESTAR_VENC_XX = '06';
+    const INSTRUCAO_PROTESTAR_VENC_10 = '10';
     const INSTRUCAO_PROTESTAR_VENC_15 = '15';
     const INSTRUCAO_PROTESTAR_VENC_20 = '20';
     const INSTRUCAO_PROTESTAR_VENC_25 = '25';
@@ -68,13 +69,13 @@ class Bb extends AbstractRemessa implements RemessaContract
     const INSTRUCAO_DEVOLVER = '42';
     const INSTRUCAO_BAIXAR = '44';
     const INSTRUCAO_ENTREGAR_SACADO_PAGAMENTO = '46';
+    const INSTRUCAO_NEGATIVA_SEM_PROTESTO = '88';
 
     public function __construct(array $params = [])
     {
         parent::__construct($params);
         $this->addCampoObrigatorio('convenio', 'convenioLider');
     }
-
 
     /**
      * Código do banco

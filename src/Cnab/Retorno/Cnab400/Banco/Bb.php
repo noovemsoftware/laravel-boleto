@@ -43,7 +43,7 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         '23' => 'Indicação de encaminhamento a cartório',
         '24' => 'Sustar Protesto',
         '25' => 'Dispensar Juros de mora',
-        '26' => 'Alteração do número do título dado pelo Cedente (Seu número) – 10 e 15 posições',
+        '26' => 'Alteração do número do título dado pelo Cedente (Seu número) - 10 e 15 posições',
         '28' => 'Manutenção de titulo vencido',
         '31' => 'Conceder desconto',
         '32' => 'Não conceder desconto',
@@ -83,7 +83,7 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         '11' => 'inexistência de margem para desconto',
         '12' => 'o banco não tem agência na praça do sacado',
         '13' => 'razões cadastrais',
-        '14' => 'sacado interligado com o sacador (só admissível em cobrança simples- cart. 11 e 17)',
+        '14' => 'sacado interligado com o sacador (só admissível em cobrança simples - cart. 11 e 17)',
         '15' => 'Titulo sacado contra órgão do Poder Público (só admissível na carteira 11 e sem ordem de protesto)',
         '16' => 'Titulo preenchido de forma irregular',
         '17' => 'Titulo rasurado',
@@ -133,8 +133,8 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         '61' => 'Titulo já foi fichado para protesto',
         '62' => 'Alteração da situação de debito inválida para o código de responsabilidade',
         '63' => 'DV do nosso número inválido',
-        '64' => 'Titulo não passível de débito/baixa – situação anormal',
-        '65' => 'Titulo com ordem de não protestar – não pode ser encaminhado a cartório',
+        '64' => 'Titulo não passível de débito/baixa - situação anormal',
+        '65' => 'Titulo com ordem de não protestar - não pode ser encaminhado a cartório',
         '66' => 'Número do documento do sacado (CNPJ/CPF) inválido',
         '67' => 'Titulo/carne rejeitado',
         '68' => 'Código/Data/Percentual de multa inválido',
@@ -146,12 +146,13 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         '74' => 'Cliente não cadastrado no CIOPE (Desconto/Vendor)',
         '75' => 'Qtde. de dias do prazo limite p/ recebimento de título vencido inválido',
         '76' => 'Titulo excluído automaticamente por decurso de prazo CIOPE (Desconto/Vendor)',
-        '77' => 'Titulo vencido transferido para a conta 1 – Carteira vinculada',
+        '77' => 'Titulo vencido transferido para a conta 1 - Carteira vinculada',
         '80' => 'Nosso numero inválido',
         '81' => 'Data para concessão do desconto inválida. Gerada nos seguintes casos: 11 - erro na data do desconto; 12 - data do desconto anterior à data de emissão',
         '82' => 'CEP do sacado inválido',
         '83' => 'Carteira/variação não localizada no cedente',
         '84' => 'Titulo não localizado na existência',
+        '85' => 'Recusa do Comando "41" - Parâmetro de Liquidação Parcial.',
         '99' => 'Outros motivos',
     ];
 
@@ -216,15 +217,26 @@ class Bb extends AbstractRetorno implements RetornoCnab400
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
             ->setDataVencimento($this->rem(147, 152, $detalhe))
             ->setDataCredito($this->rem(176, 181, $detalhe))
-            ->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe)/100, 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
-            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
-            ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false))
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
+
+        // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
+        if ($this->usandoCentavos) {
+            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe), 2, false))
+            ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe), 2, false))
+            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
+            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
+            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
+            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
+            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe), 2, false));
+        } else {
+            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
+            ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe) / 100, 2, false))
+            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
+            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
+            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
+            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
+            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe) / 100, 2, false));
+        }
 
         if ($d->hasOcorrencia('05', '06', '07', '08', '15')) {
             $this->totais['liquidados']++;
@@ -260,13 +272,17 @@ class Bb extends AbstractRetorno implements RetornoCnab400
     protected function processarTrailer(array $trailer)
     {
         $this->getTrailer()
-            ->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false))
             ->setQuantidadeTitulos((int) $this->rem(18, 25, $trailer))
             ->setQuantidadeErros((int) $this->totais['erros'])
             ->setQuantidadeEntradas((int) $this->totais['entradas'])
             ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
             ->setQuantidadeBaixados((int) $this->totais['baixados'])
             ->setQuantidadeAlterados((int) $this->totais['alterados']);
+        if ($this->usandoCentavos) {
+            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer), 2, false));
+        } else {
+            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false));
+        }
 
         return true;
     }

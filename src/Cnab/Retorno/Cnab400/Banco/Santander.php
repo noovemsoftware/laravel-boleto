@@ -397,12 +397,12 @@ class Santander extends AbstractRetorno implements RetornoCnab400
         ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
         ->setQuantidadeBaixados((int) $this->totais['baixados'])
         ->setQuantidadeAlterados((int) $this->totais['alterados']);
-
         if ($this->usandoCentavos) {
             $totais->setValorTitulos(Util::nFloat($this->totais['valor_recebido'], 2, false));
         } else {
             $totais->setValorTitulos(Util::nFloat($this->totais['valor_recebido'] / 100, 2, false));
         }
+
         return true;
     }
 }
