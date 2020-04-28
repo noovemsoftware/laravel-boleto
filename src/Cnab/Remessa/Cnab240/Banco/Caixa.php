@@ -16,7 +16,6 @@ use Eduardokum\LaravelBoleto\Util;
 
 class Caixa extends AbstractRemessa implements RemessaContract
 {
-
     const OCORRENCIA_REMESSA = '01';
     const OCORRENCIA_PEDIDO_BAIXA = '02';
     const OCORRENCIA_CONCESSAO_ABATIMENTO = '04';
@@ -225,7 +224,7 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(213, 232, '');
         $this->add(233, 240, '');
 
-        if($boleto->getSacadorAvalista()) {
+        if ($boleto->getSacadorAvalista()) {
             $this->add(154, 154, strlen(Util::onlyNumbers($boleto->getSacadorAvalista()->getDocumento())) == 14 ? 2 : 1);
             $this->add(155, 169, Util::formatCnab('9', Util::onlyNumbers($boleto->getSacadorAvalista()->getDocumento()), 15));
             $this->add(170, 209, Util::formatCnab('X', $boleto->getSacadorAvalista()->getNome(), 30));
@@ -302,7 +301,11 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(164, 166, '101');
         $this->add(167, 171, '00000');
         $this->add(172, 191, '');
-        $this->add(192, 211, Util::formatCnab('X','REMESSA-PRODUCAO', 20));
+        if ($this->homologacao) {
+            $this->add(192, 211, Util::formatCnab('X', 'REMESSA-TESTE', 20));
+        } else {
+            $this->add(192, 211, Util::formatCnab('X', 'REMESSA-PRODUCAO', 20));
+        }
         $this->add(212, 215, '');
         $this->add(216, 240, '');
         return $this;
@@ -354,7 +357,7 @@ class Caixa extends AbstractRemessa implements RemessaContract
     {
         $this->iniciaTrailerLote();
 
-        $valor = array_reduce($this->boletos, function($valor, $boleto) {
+        $valor = array_reduce($this->boletos, function ($valor, $boleto) {
             return $valor + $boleto->getValor();
         }, 0);
 

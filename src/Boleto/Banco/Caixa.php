@@ -6,7 +6,7 @@ use Eduardokum\LaravelBoleto\CalculoDV;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Util;
 
-class Caixa  extends AbstractBoleto implements BoletoContract
+class Caixa extends AbstractBoleto implements BoletoContract
 {
     public function __construct(array $params = [])
     {
@@ -111,10 +111,11 @@ class Caixa  extends AbstractBoleto implements BoletoContract
      * Na CEF deve retornar agência (sem o DV) / código beneficiário (com DV)
      * @return [type] [description]
      */
-    public function getAgenciaCodigoBeneficiario(){
+    public function getAgenciaCodigoBeneficiario()
+    {
         return $this->getAgencia() . ' / ' .
-               $this->getCodigoCliente() . '-' .
-               Util::modulo11($this->getCodigoCliente());
+            $this->getCodigoCliente() . '-' .
+            Util::modulo11($this->getCodigoCliente());
     }
     /**
      * Seta dias para baixa automática
@@ -166,7 +167,8 @@ class Caixa  extends AbstractBoleto implements BoletoContract
      *
      * @return array
      */
-    public static function parseCampoLivre($campoLivre) {
+    public static function parseCampoLivre($campoLivre)
+    {
         return [
             'convenio' => null,
             'agencia' => null,
