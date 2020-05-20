@@ -635,7 +635,7 @@ abstract class AbstractBoleto implements BoletoContract
     {
         return $this->dataDocumento;
     }
-	
+
    /**
      * Retorna a data do juros após
      *
