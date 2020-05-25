@@ -310,13 +310,17 @@ class Bb extends AbstractRemessa implements RemessaContract
         $this->add(394, 394, '');
         $this->add(395, 400, Util::formatCnab('9', $this->iRegistros + 1, 6));
 
-        if ($boleto->getMulta() > 0) {
+        if ($boleto->getStatus() == $boleto::STATUS_REGISTRO and $boleto->getMulta() > 0) {
             $this->iniciaDetalhe();
 
+            $vencimento = $boleto->getDataVencimento();
+            if (is_numeric($boleto->getJurosApos()) and $boleto->getJurosApos() > 0) {
+                $vencimento = $vencimento->copy()->addDays($boleto->getJurosApos());
+            }
             $this->add(1, 1, 5);
             $this->add(2, 3, 99);
             $this->add(4, 4, 2);
-            $this->add(5, 10, $boleto->getJurosApos() === false ? '000000' : $boleto->getDataVencimento()->copy()->addDays($boleto->getJurosApos())->format('dmy'));
+            $this->add(5, 10, $vencimento->format('dmy'));
             $this->add(11, 22, Util::formatCnab('9', $boleto->getMulta(), 12, 2));
             $this->add(23, 394, '');
             $this->add(395, 400, Util::formatCnab('9', $this->iRegistros + 1, 6));
