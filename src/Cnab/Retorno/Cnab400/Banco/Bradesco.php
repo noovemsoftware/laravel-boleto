@@ -142,7 +142,6 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
      */
     protected function processarDetalhe(array $detalhe)
     {
-        //dd($detalhe);
         if ($this->count() == 1) {
             $this->getHeader()
                 ->setAgencia($this->rem(25, 29, $detalhe))
@@ -163,33 +162,30 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setBancoOrigemCheque($this->rem(315, 318, $detalhe))
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
-        // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
-        if (!$this->usandoCentavos){
-          $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
-          ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
-          ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe)/100, 2, false))
-          ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
-          ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
-          ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
-          ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
-          ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false)) // bradesco usa juros e multa no mesmo campo
-          ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
-
+        if (!$this->usandoCentavos) {
+            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
+                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
+                ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe)/100, 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
+                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false)) // bradesco usa juros e multa no mesmo campo
+                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
         } else {
-          $d->setValor($this->rem(153, 165, $detalhe))
-          ->setValorTarifa($this->rem(176, 188, $detalhe))
-          ->setValorOutrasDespesas($this->rem(189, 201, $detalhe))
-          ->setValorIOF($this->rem(215, 227, $detalhe))
-          ->setValorAbatimento($this->rem(228, 240, $detalhe))
-          ->setValorDesconto($this->rem(241, 253, $detalhe))
-          ->setValorRecebido($this->rem(254, 266, $detalhe))
-          ->setValorMora($this->rem(267, 279, $detalhe)) // bradesco usa juros e multa no mesmo campo
-          ->setValorOutrasReceitas($this->rem(280, 292, $detalhe));
+            $d->setValor($this->rem(153, 165, $detalhe))
+                ->setValorTarifa($this->rem(176, 188, $detalhe))
+                ->setValorOutrasDespesas($this->rem(189, 201, $detalhe))
+                ->setValorIOF($this->rem(215, 227, $detalhe))
+                ->setValorAbatimento($this->rem(228, 240, $detalhe))
+                ->setValorDesconto($this->rem(241, 253, $detalhe))
+                ->setValorRecebido($this->rem(254, 266, $detalhe))
+                ->setValorMora($this->rem(267, 279, $detalhe)) // bradesco usa juros e multa no mesmo campo
+                ->setValorOutrasReceitas($this->rem(280, 292, $detalhe));
         }
 
-
         $msgAdicional = str_split(sprintf('%08s', $this->rem(319, 328, $detalhe)), 2) + array_fill(0, 5, '');
-        if ($d->hasOcorrencia('06', '15', '17')) {
+        if ($d->hasOcorrencia('06', '15', '16', '17')) {
             $this->totais['liquidados']++;
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
         } elseif ($d->hasOcorrencia('02')) {
@@ -213,10 +209,10 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
                 Arr::get($this->rejeicoes, $msgAdicional[3], ''),
                 Arr::get($this->rejeicoes, $msgAdicional[4], '')
             );
-            if($d->hasOcorrencia('03')) {
-               if(isset($this->rejeicoes[$this->rem(319, 320, $detalhe)])){
-                  $d->setRejeicao($this->rejeicoes[$this->rem(319, 320, $detalhe)]);
-               }
+            if ($d->hasOcorrencia('03')) {
+                if (isset($this->rejeicoes[$this->rem(319, 320, $detalhe)])) {
+                    $d->setRejeicao($this->rejeicoes[$this->rem(319, 320, $detalhe)]);
+                }
             }
             $d->setError($error);
         } else {
@@ -243,12 +239,12 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
           ->setQuantidadeAbatimentosCancelados((int) $this->totais['abatimentosCancelados'])
           ->setQuantidadeAlterados((int) $this->totais['alterados']) // vencimentos alterados
           ->setQuantidadeAbatimentosConcedidos((int) $this->totais['abatimentosConcedidos'])
-          ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['ciProtestos'])
+          ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['protestados'])
           ->setQuantidadeRateiosEfetuados((int) $this->totais['rateios']);
 
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if (!$this->usandoCentavos) {
-          $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false)) // titulos em cobranca
+            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false)) // titulos em cobranca
             ->setValorEntradas(Util::nFloat($this->rem(63, 74, $trailer)/100, 2, false))
             ->setValorLiquidados(Util::nFloat($this->rem(75, 86, $trailer)/100, 2, false))
             ->setValorBaixados(Util::nFloat($this->rem(109, 120, $trailer)/100, 2, false))
@@ -258,7 +254,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setValorConfirmacaoInstrucaoProtestos(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
             ->setValorRateiosEfetuados(Util::nFloat($this->rem(363, 377, $trailer)/100, 2, false));
         } else {
-          $totais->setValorTitulos($this->rem(26, 39, $trailer)) // titulos em cobranca
+            $totais->setValorTitulos($this->rem(26, 39, $trailer)) // titulos em cobranca
             ->setValorEntradas($this->rem(63, 74, $trailer))
             ->setValorLiquidados($this->rem(75, 86, $trailer))
             ->setValorBaixados($this->rem(109, 120, $trailer))
