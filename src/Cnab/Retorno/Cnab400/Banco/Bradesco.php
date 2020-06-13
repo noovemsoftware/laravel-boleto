@@ -64,7 +64,6 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
      * @var array
      */
     private $rejeicoes = [
-        '00' => 'Ocorrência Aceita',
         '02' => 'Código do registro detalhe inválido',
         '03' => 'Código da ocorrência inválida',
         '04' => 'Código de ocorrência não permitida para a carteira',
