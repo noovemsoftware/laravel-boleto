@@ -325,26 +325,26 @@ class Santander extends AbstractRetorno implements RetornoCnab400
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if ($this->usandoCentavos) {
             $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe), 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe), 2, false))
-            ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe), 2, false))
-            ->setValorMulta(Util::nFloat($this->rem(202, 214, $detalhe), 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
-            ->setValorMora(Util::nFloat($this->rem(280, 292, $detalhe), 2, false))
-            ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe), 2, false));
+                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe), 2, false))
+                ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe), 2, false))
+                ->setValorMulta(Util::nFloat($this->rem(202, 214, $detalhe), 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
+                ->setValorMora(Util::nFloat($this->rem(280, 292, $detalhe), 2, false))
+                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe), 2, false));
         } else {
             $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe) / 100, 2, false))
-            ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe) / 100, 2, false))
-            ->setValorMulta(Util::nFloat($this->rem(202, 214, $detalhe) / 100, 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
-            ->setValorMora(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false))
-            ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false));
+                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe) / 100, 2, false))
+                ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe) / 100, 2, false))
+                ->setValorMulta(Util::nFloat($this->rem(202, 214, $detalhe) / 100, 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
+                ->setValorMora(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false))
+                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false));
         }
 
         $this->totais['valor_recebido'] += $d->getValorRecebido();

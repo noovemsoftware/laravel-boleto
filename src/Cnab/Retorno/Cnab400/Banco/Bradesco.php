@@ -178,17 +178,7 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             ->setBancoOrigemCheque($this->rem(315, 318, $detalhe))
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
-        if (!$this->usandoCentavos) {
-            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
-                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
-                ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe)/100, 2, false))
-                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
-                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
-                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
-                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
-                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false)) // bradesco usa juros e multa no mesmo campo
-                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
-        } else {
+        if ($this->usandoCentavos) {
             $d->setValor($this->rem(153, 165, $detalhe))
                 ->setValorTarifa($this->rem(176, 188, $detalhe))
                 ->setValorOutrasDespesas($this->rem(189, 201, $detalhe))
@@ -198,6 +188,16 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
                 ->setValorRecebido($this->rem(254, 266, $detalhe))
                 ->setValorMora($this->rem(267, 279, $detalhe)) // bradesco usa juros e multa no mesmo campo
                 ->setValorOutrasReceitas($this->rem(280, 292, $detalhe));
+        } else {
+            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe)/100, 2, false))
+                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe)/100, 2, false))
+                ->setValorOutrasDespesas(Util::nFloat($this->rem(189, 201, $detalhe)/100, 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe)/100, 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe)/100, 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe)/100, 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe)/100, 2, false))
+                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false)) // bradesco usa juros e multa no mesmo campo
+                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false));
         }
 
         $msgAdicional = str_split(sprintf('%08s', $this->rem(319, 328, $detalhe)), 2) + array_fill(0, 5, '');
@@ -247,38 +247,38 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
     protected function processarTrailer(array $trailer)
     {
         $totais = $this->getTrailer()
-          ->setQuantidadeTitulos($this->rem(18, 25, $trailer)) // titulos em cobranca
-          ->setQuantidadeErros((int) $this->totais['erros'])
-          ->setQuantidadeEntradas((int) $this->totais['entradas'])
-          ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
-          ->setQuantidadeBaixados((int) $this->totais['baixados'])
-          ->setQuantidadeAbatimentosCancelados((int) $this->totais['abatimentosCancelados'])
-          ->setQuantidadeAlterados((int) $this->totais['alterados']) // vencimentos alterados
-          ->setQuantidadeAbatimentosConcedidos((int) $this->totais['abatimentosConcedidos'])
-          ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['protestados'])
-          ->setQuantidadeRateiosEfetuados((int) $this->totais['rateios']);
+            ->setQuantidadeTitulos($this->rem(18, 25, $trailer)) // titulos em cobranca
+            ->setQuantidadeErros((int) $this->totais['erros'])
+            ->setQuantidadeEntradas((int) $this->totais['entradas'])
+            ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
+            ->setQuantidadeBaixados((int) $this->totais['baixados'])
+            ->setQuantidadeAbatimentosCancelados((int) $this->totais['abatimentosCancelados'])
+            ->setQuantidadeAlterados((int) $this->totais['alterados']) // vencimentos alterados
+            ->setQuantidadeAbatimentosConcedidos((int) $this->totais['abatimentosConcedidos'])
+            ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['protestados'])
+            ->setQuantidadeRateiosEfetuados((int) $this->totais['rateios']);
 
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
-        if (!$this->usandoCentavos) {
-            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false)) // titulos em cobranca
-            ->setValorEntradas(Util::nFloat($this->rem(63, 74, $trailer)/100, 2, false))
-            ->setValorLiquidados(Util::nFloat($this->rem(75, 86, $trailer)/100, 2, false))
-            ->setValorBaixados(Util::nFloat($this->rem(109, 120, $trailer)/100, 2, false))
-            ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false))
-            ->setValorAlterados(Util::nFloat($this->rem(143, 154, $trailer)/100, 2, false)) // vencimentos alterados
-            ->setValorAbatimentosConcedidos(Util::nFloat($this->rem(160, 171, $trailer)/100, 2, false))
-            ->setValorConfirmacaoInstrucaoProtestos(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
-            ->setValorRateiosEfetuados(Util::nFloat($this->rem(363, 377, $trailer)/100, 2, false));
-        } else {
+        if ($this->usandoCentavos) {
             $totais->setValorTitulos($this->rem(26, 39, $trailer)) // titulos em cobranca
-            ->setValorEntradas($this->rem(63, 74, $trailer))
-            ->setValorLiquidados($this->rem(75, 86, $trailer))
-            ->setValorBaixados($this->rem(109, 120, $trailer))
-            ->setValorAbatimentosCancelados($this->rem(126, 137, $trailer))
-            ->setValorAlterados($this->rem(143, 154, $trailer)) // vencimentos alterados
-            ->setValorAbatimentosConcedidos($this->rem(160, 171, $trailer))
-            ->setValorConfirmacaoInstrucaoProtestos($this->rem(177, 188, $trailer))
-            ->setValorRateiosEfetuados($this->rem(363, 377, $trailer));
+                ->setValorEntradas($this->rem(63, 74, $trailer))
+                ->setValorLiquidados($this->rem(75, 86, $trailer))
+                ->setValorBaixados($this->rem(109, 120, $trailer))
+                ->setValorAbatimentosCancelados($this->rem(126, 137, $trailer))
+                ->setValorAlterados($this->rem(143, 154, $trailer)) // vencimentos alterados
+                ->setValorAbatimentosConcedidos($this->rem(160, 171, $trailer))
+                ->setValorConfirmacaoInstrucaoProtestos($this->rem(177, 188, $trailer))
+                ->setValorRateiosEfetuados($this->rem(363, 377, $trailer));
+        } else {
+            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false)) // titulos em cobranca
+                ->setValorEntradas(Util::nFloat($this->rem(63, 74, $trailer)/100, 2, false))
+                ->setValorLiquidados(Util::nFloat($this->rem(75, 86, $trailer)/100, 2, false))
+                ->setValorBaixados(Util::nFloat($this->rem(109, 120, $trailer)/100, 2, false))
+                ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false))
+                ->setValorAlterados(Util::nFloat($this->rem(143, 154, $trailer)/100, 2, false)) // vencimentos alterados
+                ->setValorAbatimentosConcedidos(Util::nFloat($this->rem(160, 171, $trailer)/100, 2, false))
+                ->setValorConfirmacaoInstrucaoProtestos(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
+                ->setValorRateiosEfetuados(Util::nFloat($this->rem(363, 377, $trailer)/100, 2, false));
         }
 
         return true;

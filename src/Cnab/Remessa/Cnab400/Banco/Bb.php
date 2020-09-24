@@ -272,7 +272,11 @@ class Bb extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
+        } else {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        }
         $this->add(140, 142, $this->getCodigoBanco());
         $this->add(143, 146, '0000');
         $this->add(147, 147, '');
@@ -291,9 +295,17 @@ class Bb extends AbstractRemessa implements RemessaContract
                 $diasProtesto = Util::formatCnab('9', $boleto->getDiasProtesto(), 2, 0);
             }
         }
-        $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+        } else {
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        }
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+        } else {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
         $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '02' : '01');

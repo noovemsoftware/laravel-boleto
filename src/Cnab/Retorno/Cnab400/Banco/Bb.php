@@ -222,20 +222,20 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if ($this->usandoCentavos) {
             $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe), 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe), 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
-            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe), 2, false));
+                ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe), 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
+                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe), 2, false));
         } else {
             $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
-            ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe) / 100, 2, false))
-            ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
-            ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
-            ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
-            ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
-            ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe) / 100, 2, false));
+                ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe) / 100, 2, false))
+                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
+                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
+                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
+                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
+                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe) / 100, 2, false));
         }
 
         if ($d->hasOcorrencia('05', '06', '07', '08', '15')) {
@@ -271,7 +271,7 @@ class Bb extends AbstractRetorno implements RetornoCnab400
      */
     protected function processarTrailer(array $trailer)
     {
-        $this->getTrailer()
+        $totais = $this->getTrailer()
             ->setQuantidadeTitulos((int) $this->rem(18, 25, $trailer))
             ->setQuantidadeErros((int) $this->totais['erros'])
             ->setQuantidadeEntradas((int) $this->totais['entradas'])
