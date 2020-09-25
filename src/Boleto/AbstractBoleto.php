@@ -695,6 +695,31 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
+     * Define o campo Espécie Doc utizando o codigo
+     *
+     * @param  int $codigo
+     * @param  int $tipo
+     *
+     * @return AbstractBoleto
+     */
+    public function setEspecieDocPeloCodigo($codigo, $tipo = 240)
+    {
+        if (!empty($this->especiesCodigo240) && $tipo == 240) {
+            $especies = $this->especiesCodigo240;
+        } elseif (!empty($this->especiesCodigo400) && $tipo == 400) {
+            $especies = $this->especiesCodigo400;
+        } else {
+            $especies = $this->especiesCodigo;
+        }
+        $especies = array_flip($especies);
+        if (isset($especies[$codigo])) {
+            $this->especieDoc = $especies[$codigo];
+        }
+
+        return $this;
+    }
+
+    /**
      * Retorna o codigo da Espécie Doc
      *
      * @param int $default
