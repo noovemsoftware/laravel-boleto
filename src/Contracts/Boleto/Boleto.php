@@ -99,7 +99,7 @@ interface Boleto
      * @return \Carbon\Carbon
      */
     public function getDataVencimento();
-    
+
     /**
      * @return \Carbon\Carbon
      */
@@ -223,6 +223,14 @@ interface Boleto
      * @return mixed
      */
     public function getEspecieDoc();
+
+    /**
+     * @param  int $codigo
+     * @param  int $tipo
+     *
+     * @return mixed
+     */
+    public function setEspecieDocPeloCodigo($codigo, $tipo = 240);
 
     /**
      * @param int $default

@@ -79,8 +79,6 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
      */
     private $_position = 1;
 
-
-
     /**
      *
      * @param String $file

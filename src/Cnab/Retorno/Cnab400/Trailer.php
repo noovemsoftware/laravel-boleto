@@ -11,12 +11,12 @@ class Trailer implements TrailerContract
     /**
      * @var float
      */
-    protected $valorTitulos;
+    protected $valorTitulos = 0;
 
     /**
      * @var int
      */
-    protected $quantidadeTitulos;
+    protected $quantidadeTitulos = 0;
 
     /**
      * @var int
@@ -133,7 +133,7 @@ class Trailer implements TrailerContract
     }
 
     /**
-     * @param float $valo
+     * @param float $valor
      *
      * @return Trailer
      */

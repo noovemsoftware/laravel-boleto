@@ -52,9 +52,11 @@ class Itau extends AbstractBoleto implements BoletoContract
         'DS' => '08',
         'LC' => '09',
         'ND' => '13',
-        'CDA' => '15',
+        'DD' => '15',
         'EC' => '16',
         'CPS' => '17',
+        'BP'  => '18',
+        'DV'  => '99',
     ];
     /**
      * Seta dias para baixa automática
