@@ -219,15 +219,14 @@ class Bb extends AbstractRetorno implements RetornoCnab400
             ->setDataCredito($this->rem(176, 181, $detalhe))
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
-        // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if ($this->usandoCentavos) {
-            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe), 2, false))
-                ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe), 2, false))
-                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe), 2, false))
-                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false))
-                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false))
-                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false))
-                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe), 2, false));
+            $d->setValor($this->rem(153, 165, $detalhe))
+                ->setValorTarifa($this->rem(182, 188, $detalhe))
+                ->setValorIOF($this->rem(215, 227, $detalhe))
+                ->setValorAbatimento($this->rem(228, 240, $detalhe))
+                ->setValorDesconto($this->rem(241, 253, $detalhe))
+                ->setValorRecebido($this->rem(254, 266, $detalhe))
+                ->setValorMora($this->rem(267, 279, $detalhe));
         } else {
             $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
                 ->setValorTarifa(Util::nFloat($this->rem(182, 188, $detalhe) / 100, 2, false))
@@ -279,7 +278,7 @@ class Bb extends AbstractRetorno implements RetornoCnab400
             ->setQuantidadeBaixados((int) $this->totais['baixados'])
             ->setQuantidadeAlterados((int) $this->totais['alterados']);
         if ($this->usandoCentavos) {
-            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer), 2, false));
+            $totais->setValorTitulos($this->rem(26, 39, $trailer));
         } else {
             $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false));
         }
