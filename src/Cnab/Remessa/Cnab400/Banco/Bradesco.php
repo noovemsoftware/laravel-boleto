@@ -208,7 +208,7 @@ class Bradesco extends AbstractRemessa implements RemessaContract
         }
         $this->add(140, 142, '000');
         $this->add(143, 147, '00000');
-        $this->add(148, 149, $boleto->getEspecieDocCodigo());
+        $this->add(148, 149, $boleto->getEspecieDocCodigo('01', 400));
         $this->add(150, 150, 'N');
         $this->add(151, 156, $boleto->getDataDocumento()->format('dmy'));
         $this->add(157, 158, self::INSTRUCAO_SEM);

@@ -95,6 +95,7 @@ class Itau extends AbstractBoleto implements BoletoContract
         $dv = CalculoDV::itauNossoNumero($agencia, $conta, $carteira, $numero_boleto);
         return $numero_boleto . $dv;
     }
+
     /**
      * Método que retorna o nosso numero usado no boleto. alguns bancos possuem algumas diferenças.
      *
@@ -104,6 +105,7 @@ class Itau extends AbstractBoleto implements BoletoContract
     {
         return $this->getCarteira() . '/' . substr_replace($this->getNossoNumero(), '-', -1, 0);
     }
+
     /**
      * Método para gerar o código da posição de 20 a 44
      *
@@ -147,6 +149,7 @@ class Itau extends AbstractBoleto implements BoletoContract
             'contaCorrenteDv' => substr($campoLivre, 21, 1),
         ];
     }
+
     /**
      * Método que retorna o digito da conta do Itau
      *
