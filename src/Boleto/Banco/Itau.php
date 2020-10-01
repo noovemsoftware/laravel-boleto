@@ -22,6 +22,7 @@ class Itau extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco = self::COD_BANCO_ITAU;
+
     /**
      * Variáveis adicionais.
      *
@@ -30,12 +31,14 @@ class Itau extends AbstractBoleto implements BoletoContract
     public $variaveis_adicionais = [
         'carteira_nome' => '',
     ];
+
     /**
      * Define as carteiras disponíveis para este banco
      *
      * @var array
      */
-    protected $carteiras = ['112', '115', '188', '109', '121', '180', '110', '111'];
+    protected $carteiras = ['108', '180', '121', '150', '109', '191', '104', '188', '147', '112', '115'];
+
     /**
      * Espécie do documento, coódigo para remessa
      *
@@ -58,6 +61,7 @@ class Itau extends AbstractBoleto implements BoletoContract
         'BP'  => '18',
         'DV'  => '99',
     ];
+
     /**
      * Seta dias para baixa automática
      *

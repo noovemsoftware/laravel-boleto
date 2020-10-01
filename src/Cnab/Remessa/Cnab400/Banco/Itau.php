@@ -129,7 +129,7 @@ class Itau extends AbstractRemessa implements RemessaContract
      *
      * @var array
      */
-    protected $carteiras = ['108', '180', '121', '109', '191', '104', '188', '147', '112', '115'];
+    protected $carteiras = ['108', '180', '121', '150', '109', '191', '104', '188', '147', '112', '115'];
 
     /**
      * Caracter de fim de linha
