@@ -252,7 +252,7 @@ class Itau extends AbstractRetorno implements RetornoCnab400
         }
 
         $msgAdicional = str_split(sprintf('%08s', $this->rem(378, 385, $detalhe)), 2) + array_fill(0, 4, '');
-        if ($d->hasOcorrencia('06', '07', '08', '10', '59')) {
+        if ($d->hasOcorrencia('06', '07', '08', '10', '59', '72', '76')) {
             $this->totais['qtdLiquidados']++;
             $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
@@ -260,7 +260,7 @@ class Itau extends AbstractRetorno implements RetornoCnab400
             $this->totais['qtdEntradas']++;
             $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
-        } elseif ($d->hasOcorrencia('05', '09', '47', '72')) {
+        } elseif ($d->hasOcorrencia('05', '09', '47')) {
             $this->totais['qtdBaixados']++;
             $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
@@ -272,7 +272,7 @@ class Itau extends AbstractRetorno implements RetornoCnab400
             $this->totais['qtdAlterados']++;
             $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
-        } elseif ($d->hasOcorrencia('03', '15', '16', '17', '18', '24', '60')) {
+        } elseif ($d->hasOcorrencia('03', '15', '16', '17', '18', '24', '25', '60', '74')) {
             $this->totais['qtdErros']++;
             $error = Util::appendStrings(
                 Arr::get($this->rejeicoes, $msgAdicional[0], ''),
