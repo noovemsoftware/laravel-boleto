@@ -4,17 +4,23 @@ namespace Eduardokum\LaravelBoleto\Boleto\Banco;
 use Eduardokum\LaravelBoleto\Boleto\AbstractBoleto;
 use Eduardokum\LaravelBoleto\CalculoDV;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
 use Eduardokum\LaravelBoleto\Util;
 
 class Bradesco extends AbstractBoleto implements BoletoContract
 {
     /**
+     * Local de pagamento
+     *
+     * @var string
+     */
+    protected $localPagamento = 'Pagável Preferencialmente na rede Bradesco ou no Bradesco expresso';
+
+    /**
      * Código do banco
      *
      * @var string
      */
-    protected $codigoBanco = Boleto::COD_BANCO_BRADESCO;
+    protected $codigoBanco = self::COD_BANCO_BRADESCO;
 
     /**
      * Define as carteiras disponíveis para este banco
