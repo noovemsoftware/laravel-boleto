@@ -162,12 +162,17 @@ class Bb extends AbstractRetorno implements RetornoCnab400
     protected function init()
     {
         $this->totais = [
-            'liquidados' => 0,
-            'entradas' => 0,
-            'baixados' => 0,
-            'protestados' => 0,
-            'erros' => 0,
-            'alterados' => 0,
+            'qtdLiquidados' => 0,
+            'vlrLiquidados' => 0,
+            'qtdEntradas' => 0,
+            'vlrEntradas' => 0,
+            'qtdBaixados' => 0,
+            'vlrBaixados' => 0,
+            'qtdProtestados' => 0,
+            'vlrProtestados' => 0,
+            'qtdAlterados' => 0,
+            'vlrAlterados' => 0,
+            'qtdErros' => 0,
         ];
     }
 
@@ -238,22 +243,33 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         }
 
         if ($d->hasOcorrencia('05', '06', '07', '08', '15')) {
-            $this->totais['liquidados']++;
+            // $this->totais['liquidados']++;
+            $this->totais['qtdLiquidados']++;
+            $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
         } elseif ($d->hasOcorrencia('02')) {
-            $this->totais['entradas']++;
+            // $this->totais['entradas']++;
+            $this->totais['qtdEntradas']++;
+            $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
         } elseif ($d->hasOcorrencia('09', '10')) {
-            $this->totais['baixados']++;
+            // $this->totais['baixados']++;
+            $this->totais['qtdBaixados']++;
+            $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
         } elseif ($d->hasOcorrencia('61')) {
-            $this->totais['protestados']++;
+            // $this->totais['protestados']++;
+            $this->totais['qtdProtestados']++;
+            $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
         } elseif ($d->hasOcorrencia('14')) {
-            $this->totais['alterados']++;
+            // $this->totais['alterados']++;
+            $this->totais['qtdAlterados']++;
+            $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
         } elseif ($d->hasOcorrencia('03')) {
-            $this->totais['erros']++;
+            // $this->totais['erros']++;
+            $this->totais['qtdErros']++;
             $d->setError(Arr::get($this->rejeicoes, $this->rem(87, 88, $detalhe), 'Consulte seu Internet Banking'));
         } else {
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
@@ -272,11 +288,16 @@ class Bb extends AbstractRetorno implements RetornoCnab400
     {
         $totais = $this->getTrailer()
             ->setQuantidadeTitulos((int) $this->rem(18, 25, $trailer))
-            ->setQuantidadeErros((int) $this->totais['erros'])
-            ->setQuantidadeEntradas((int) $this->totais['entradas'])
-            ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
-            ->setQuantidadeBaixados((int) $this->totais['baixados'])
-            ->setQuantidadeAlterados((int) $this->totais['alterados']);
+            ->setQuantidadeLiquidados((int) $this->totais['qtdLiquidados'])
+            ->setValorLiquidados($this->totais['vlrLiquidados'])
+            ->setQuantidadeEntradas((int) $this->totais['qtdEntradas'])
+            ->setValorEntradas($this->totais['vlrEntradas'])
+            ->setQuantidadeBaixados((int) $this->totais['qtdBaixados'])
+            ->setValorBaixados($this->totais['vlrBaixados'])
+            ->setQuantidadeAlterados((int) $this->totais['qtdAlterados']) // vencimentos alterados
+            ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['qtdProtestados'])
+            ->setValorConfirmacaoInstrucaoProtestos($this->totais['vlrProtestados'])
+            ->setQuantidadeErros((int) $this->totais['qtdErros']);
         if ($this->usandoCentavos) {
             $totais->setValorTitulos($this->rem(26, 39, $trailer));
         } else {
