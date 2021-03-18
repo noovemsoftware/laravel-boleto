@@ -40,12 +40,14 @@ abstract class AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco;
+
     /**
      * Moeda
      *
      * @var int
      */
     protected $moeda = 9;
+
     /**
      * Valor total do boleto
      *
@@ -54,29 +56,33 @@ abstract class AbstractBoleto implements BoletoContract
     protected $valor;
 
     /**
-     * Valor total do boleto
+     * Valores em centavos boleto
      *
      * @var bool
      */
     protected $valorEmCentavos = false;
+
     /**
      * Desconto total do boleto
      *
      * @var float
      */
     protected $desconto;
+
     /**
      * Valor para multa
      *
      * @var float
      */
     protected $multa = 0;
+
     /**
      * Valor para mora juros
      *
      * @var float
      */
     protected $juros = 0;
+
     /**
      * Dias apos vencimento do juros
      *
@@ -85,7 +91,7 @@ abstract class AbstractBoleto implements BoletoContract
     protected $jurosApos = 0;
 
     /**
-     * Calcula autimaticamente o valor de mora atraves de percentual vindo de $juros
+     * Calcula automaticamente o valor de mora atraves de percentual vindo de $juros
      *
      * @var bool
      */
@@ -104,36 +110,42 @@ abstract class AbstractBoleto implements BoletoContract
      * @var integer
      */
     protected $diasProtesto = 0;
+
     /**
      * Dias para baixa automática
      *
      * @var integer
      */
     protected $diasBaixaAutomatica;
+
     /**
      * Data do documento
      *
      * @var \Carbon\Carbon
      */
     protected $dataDocumento;
+
     /**
      * Data de emissão
      *
      * @var \Carbon\Carbon
      */
     protected $dataProcessamento;
+
     /**
      * Data de vencimento
      *
      * @var \Carbon\Carbon
      */
     protected $dataVencimento;
+
     /**
      * Data de limite de desconto
      *
      * @var \Carbon\Carbon
      */
     protected $dataDesconto;
+
     /**
      * Campo de aceite
      *
@@ -636,11 +648,11 @@ abstract class AbstractBoleto implements BoletoContract
         return $this->dataDocumento;
     }
 
-   /**
-     * Retorna a data do juros após
-     *
-     * @return \Carbon\Carbon
-     */
+    /**
+      * Retorna a data do juros após
+      *
+      * @return \Carbon\Carbon
+      */
     public function getDataVencimentoApos()
     {
         return $this->getDataVencimento()->addDays((int) $this->getJurosApos());

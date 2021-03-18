@@ -1,4 +1,5 @@
 <?php
+
 namespace Eduardokum\LaravelBoleto\Cnab\Remessa\Cnab400\Banco;
 
 use Eduardokum\LaravelBoleto\Cnab\Remessa\Cnab400\AbstractRemessa;
@@ -6,7 +7,7 @@ use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Contracts\Cnab\Remessa as RemessaContract;
 use Eduardokum\LaravelBoleto\Util;
 
-class Caixa  extends AbstractRemessa implements RemessaContract
+class Caixa extends AbstractRemessa implements RemessaContract
 {
     const ESPECIE_DUPLICATA = '01';
     const ESPECIE_NOTA_PROMISSORIA = '02';
@@ -27,6 +28,7 @@ class Caixa  extends AbstractRemessa implements RemessaContract
     const OCORRENCIA_ALT_OUTROS_DADOS_EMISSAO_BOLETO = '10';
     const OCORRENCIA_ALT_PROTESTO_DEVOLUCAO = '11';
     const OCORRENCIA_ALT_DEVOLUCAO_PROTESTO = '12';
+    const OCORRENCIA_ALT_VALOR_NOMINAL = '13';
 
     const INSTRUCAO_SEM = '00';
     const INSTRUCAO_PROTESTAR_VENC_XX = '01';
@@ -37,7 +39,6 @@ class Caixa  extends AbstractRemessa implements RemessaContract
         parent::__construct($params);
         $this->addCampoObrigatorio('codigoCliente', 'idremessa');
     }
-
 
     /**
      * Código do banco
@@ -51,7 +52,7 @@ class Caixa  extends AbstractRemessa implements RemessaContract
      *
      * @var array
      */
-    protected $carteiras = ['RG', 'SR'];
+    protected $carteiras = ['01', '02'];
 
     /**
      * Caracter de fim de linha
@@ -82,19 +83,6 @@ class Caixa  extends AbstractRemessa implements RemessaContract
     public function getCodigoCliente()
     {
         return $this->codigoCliente;
-    }
-
-    /**
-     * Retorna o numero da carteira, deve ser override em casos de carteira de letras
-     *
-     * @return string
-     */
-    public function getCarteiraNumero()
-    {
-        if ($this->getCarteira() == 'SR') {
-            return '02';
-        }
-        return '01';
     }
 
     /**
@@ -165,13 +153,13 @@ class Caixa  extends AbstractRemessa implements RemessaContract
         $this->add(57, 73, Util::formatCnab('9', $boleto->getNossoNumero(), 17));
         $this->add(74, 76, '');
         $this->add(77, 106, '');
-        $this->add(107, 108, Util::formatCnab('9', $this->getCarteiraNumero(), 2));
+        $this->add(107, 108, Util::formatCnab('9', $this->getCarteira(), 2));
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
         if ($boleto->getStatus() == $boleto::STATUS_BAIXA) {
             $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
         }
         if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO) {
-            $this->add(109, 110, self::OCORRENCIA_ALT_OUTROS_DADOS); // ALTERAR VENCIMENTO
+            $this->add(109, 110, self::OCORRENCIA_ALT_OUTROS_DADOS);
         }
         if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO_DATA) {
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO);
@@ -181,10 +169,14 @@ class Caixa  extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
+        } else {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        }
         $this->add(140, 142, $this->getCodigoBanco());
         $this->add(143, 147, '00000');
-        $this->add(148, 149, $boleto->getEspecieDocCodigo());
+        $this->add(148, 149, $boleto->getEspecieDocCodigo('01', 400));
         $this->add(150, 150, $boleto->getAceite());
         $this->add(151, 156, $boleto->getDataDocumento()->format('dmy'));
         $this->add(157, 158, self::INSTRUCAO_SEM);
@@ -194,9 +186,17 @@ class Caixa  extends AbstractRemessa implements RemessaContract
         } elseif ($boleto->getDiasBaixaAutomatica() > 0) {
             $this->add(157, 158, self::INSTRUCAO_DEVOLVER_VENC_XX);
         }
-        $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+        } else {
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        }
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+        } else {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
         $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '02' : '01');

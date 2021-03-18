@@ -1,4 +1,5 @@
 <?php
+
 namespace Eduardokum\LaravelBoleto\Cnab\Retorno\Cnab400\Banco;
 
 use Eduardokum\LaravelBoleto\Cnab\Retorno\Cnab400\AbstractRetorno;
@@ -212,7 +213,6 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         }
 
         $d = $this->detalheAtual();
-
         $d->setCarteira($this->rem(107, 108, $detalhe))
             ->setNossoNumero($this->rem(64, 80, $detalhe))
             ->setNumeroDocumento($this->rem(117, 126, $detalhe))
@@ -243,32 +243,26 @@ class Bb extends AbstractRetorno implements RetornoCnab400
         }
 
         if ($d->hasOcorrencia('05', '06', '07', '08', '15')) {
-            // $this->totais['liquidados']++;
             $this->totais['qtdLiquidados']++;
             $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
         } elseif ($d->hasOcorrencia('02')) {
-            // $this->totais['entradas']++;
             $this->totais['qtdEntradas']++;
             $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
         } elseif ($d->hasOcorrencia('09', '10')) {
-            // $this->totais['baixados']++;
             $this->totais['qtdBaixados']++;
             $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
         } elseif ($d->hasOcorrencia('61')) {
-            // $this->totais['protestados']++;
             $this->totais['qtdProtestados']++;
             $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
         } elseif ($d->hasOcorrencia('14')) {
-            // $this->totais['alterados']++;
             $this->totais['qtdAlterados']++;
             $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
         } elseif ($d->hasOcorrencia('03')) {
-            // $this->totais['erros']++;
             $this->totais['qtdErros']++;
             $d->setError(Arr::get($this->rejeicoes, $this->rem(87, 88, $detalhe), 'Consulte seu Internet Banking'));
         } else {
@@ -303,7 +297,7 @@ class Bb extends AbstractRetorno implements RetornoCnab400
                 ->setValorAlterados((int) $this->totais['vlrAlterados'])
                 ->setValorConfirmacaoInstrucaoProtestos((int) $this->totais['vlrProtestados']);
         } else {
-            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false))
+            $totais->setValorTitulos((float) Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false))
                 ->setValorLiquidados((float) Util::nFloat($this->totais['vlrLiquidados'] / 100, 2, false))
                 ->setValorEntradas((float) Util::nFloat($this->totais['vlrEntradas'] / 100, 2, false))
                 ->setValorBaixados((float) Util::nFloat($this->totais['vlrBaixados'] / 100, 2, false))

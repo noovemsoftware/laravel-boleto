@@ -1,4 +1,5 @@
 <?php
+
 namespace Eduardokum\LaravelBoleto\Cnab\Retorno\Cnab400\Banco;
 
 use Eduardokum\LaravelBoleto\Util;
@@ -218,7 +219,6 @@ class Itau extends AbstractRetorno implements RetornoCnab400
     protected function processarDetalhe(array $detalhe)
     {
         $d = $this->detalheAtual();
-
         $d->setCarteira($this->rem(83, 85, $detalhe))
             ->setNossoNumero($this->rem(86, 94, $detalhe))
             ->setNumeroDocumento($this->rem(117, 126, $detalhe))

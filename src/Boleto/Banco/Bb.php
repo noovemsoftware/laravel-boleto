@@ -29,7 +29,7 @@ class Bb extends AbstractBoleto implements BoletoContract
     protected $carteiras = ['11', '12', '17', '31', '51'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -111,6 +111,7 @@ class Bb extends AbstractBoleto implements BoletoContract
         $this->convenio = $convenio;
         return $this;
     }
+
     /**
      * Retorna o número do convênio
      *
@@ -120,6 +121,7 @@ class Bb extends AbstractBoleto implements BoletoContract
     {
         return $this->convenio;
     }
+
     /**
      * Define o número da variação da carteira, para saber quando utilizar o nosso numero de 17 posições.
      *

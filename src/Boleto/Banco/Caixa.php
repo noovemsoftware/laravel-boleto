@@ -1,4 +1,5 @@
 <?php
+
 namespace Eduardokum\LaravelBoleto\Boleto\Banco;
 
 use Eduardokum\LaravelBoleto\Boleto\AbstractBoleto;
@@ -20,30 +21,103 @@ class Caixa extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $codigoBanco = self::COD_BANCO_CEF;
+
     /**
      * Define as carteiras disponíveis para este banco
      *
      * @var array
      */
-    protected $carteiras = ['RG', '01'];
+    protected $carteiras = ['01', '02'];
+
+    /**
+     * Define os nomes das carteiras para exibição no boleto
+     *
+     * @var array
+     */
+    protected $carteirasNomes = [
+        '01' => 'RG',
+        '02' => 'SR'
+    ];
+
+    /**
+     * Espécie do documento, código para remessa
+     *
+     * @var string
+     */
+    protected $especiesCodigo240 = [
+        'CH'  => '01', // Cheque
+        'DM'  => '02', // Duplicata Mercantil
+        'DMI' => '03', // Duplicata Mercantil p/ Indicação
+        'DS'  => '04', // Duplicata de Serviço
+        'DSI' => '05', // Duplicata de Serviço p/ Indicação
+        'DR'  => '06', // Duplicata Rural
+        'LC'  => '07', // Letra de Câmbio
+        'NCC' => '08', // Nota de Crédito Comercial
+        'NCE' => '09', // Nota de Crédito a Exportação
+        'NCI' => '10', // Nota de Crédito Industrial
+        'NCR' => '11', // Nota de Crédito Rural
+        'NP'  => '12', // Nota Promissória
+        'NPR' => '13', // Nota Promissória Rural
+        'TM'  => '14', // Triplicata Mercantil
+        'TS'  => '15', // Triplicata de Serviço
+        'NS'  => '16', // Nota de Seguro
+        'RC'  => '17', // Recibo
+        'FAT' => '18', // Fatura
+        'ND'  => '19', // Nota de Débito
+        'AP'  => '20', // Apólice de Seguro
+        'ME'  => '21', // Mensalidade Escolar
+        'PC'  => '22', // Parcela de Consórcio
+        'NF'  => '23', // Nota Fiscal
+        'DD'  => '24', // Documento de Dívida
+        'CPR' => '25', // Cédula de Produto Rural,
+        'CC'  => '31', // CC Cartão de Crédito,
+        'BP'  => '32', // BDP - Boleto de Proposta
+        'OU'  => '99', // Outros
+    ];
+
     /**
      * Espécie do documento, coódigo para remessa
      *
      * @var string
      */
-    protected $especiesCodigo = [
-        'DM' => '01',
-        'NP' => '02',
-        'DS' => '03',
-        'NS' => '05',
-        'LC' => '06',
+    protected $especiesCodigo400 = [
+        'DM'  => '01', // Duplicata Mercantil
+        'NP'  => '02', // Nota Promissória
+        'DS'  => '03', // Duplicata de Prestação de Serviços
+        'CH'  => '04', // Cheque
+        'NS'  => '05', // Nota de Seguro
+        'LC'  => '06', // Letra de Câmbio
+        'DMI' => '07', // Duplicata Mercantil p/ Indicação
+        'NCC' => '08', // Nota de Crédito Comercial
+        'OU'  => '09', // Outros
+        'NCI' => '10', // Nota de Crédito Industrial
+        'NCR' => '11', // Nota de Crédito Rural
+        'DSI' => '12', // Duplicata de Serviço p/ Indicação
+        'NPR' => '13', // Nota Promissória Rural
+        'TM'  => '14', // Triplicata Mercantil
+        'TS'  => '15', // Triplicata de Serviço
+        'DS'  => '16', // Duplicata Rural
+        'RC'  => '17', // Recibo
+        'FAT' => '18', // Fatura
+        'ND'  => '19', // Nota de Débito
+        'AP'  => '20', // Apólice de Seguro
+        'ME'  => '21', // Mensalidade Escolar
+        'PC'  => '22', // Parcela de Consórcio
+        'NF'  => '23', // Nota Fiscal
+        'DD'  => '24', // Documento de Dívida
+        'CPR' => '25', // Cédula de Produto Rural,
+        'NCE' => '11', // Nota de Crédito Exportação
+        'CC'  => '31', // Cartão de Crédito,
+        'BP'  => '32', // Boleto de Proposta
     ];
+
     /**
      * Codigo do cliente junto ao banco.
      *
      * @var string
      */
     protected $codigoCliente;
+
     /**
      * Seta o codigo do cliente.
      *
@@ -57,6 +131,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
 
         return $this;
     }
+
     /**
      * Retorna o codigo do cliente.
      *
@@ -66,6 +141,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
     {
         return $this->codigoCliente;
     }
+
     /**
      * Retorna o codigo do cliente como se fosse a conta
      * ja que a caixa não faz uso da conta para nada.
@@ -87,7 +163,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
     {
         $numero_boleto = Util::numberFormatGeral($this->getNumero(), 15);
         $composicao = '1';
-        if ($this->getCarteira() == 'SR') {
+        if ($this->getCarteira() == '02') {
             $composicao = '2';
         }
 
@@ -97,6 +173,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
         $numero = $carteira . Util::numberFormatGeral($numero_boleto, 15);
         return $numero;
     }
+
     /**
      * Método que retorna o nosso numero usado no boleto. alguns bancos possuem algumas diferenças.
      *
@@ -117,6 +194,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
             $this->getCodigoCliente() . '-' .
             Util::modulo11($this->getCodigoCliente());
     }
+
     /**
      * Seta dias para baixa automática
      *
