@@ -6,7 +6,7 @@ use Eduardokum\LaravelBoleto\CalculoDV;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
 use Eduardokum\LaravelBoleto\Util;
 
-class Caixa extends AbstractBoleto implements BoletoContract
+class Caixa  extends AbstractBoleto implements BoletoContract
 {
     public function __construct(array $params = [])
     {
@@ -25,7 +25,7 @@ class Caixa extends AbstractBoleto implements BoletoContract
      *
      * @var array
      */
-    protected $carteiras = ['RG', '01'];
+    protected $carteiras = ['RG'];
     /**
      * Espécie do documento, coódigo para remessa
      *
@@ -111,12 +111,12 @@ class Caixa extends AbstractBoleto implements BoletoContract
      * Na CEF deve retornar agência (sem o DV) / código beneficiário (com DV)
      * @return [type] [description]
      */
-    public function getAgenciaCodigoBeneficiario()
-    {
+    public function getAgenciaCodigoBeneficiario(){
         return $this->getAgencia() . ' / ' .
-            $this->getCodigoCliente() . '-' .
-            Util::modulo11($this->getCodigoCliente());
+               $this->getCodigoCliente() . '-' .
+               Util::modulo11($this->getCodigoCliente());
     }
+
     /**
      * Seta dias para baixa automática
      *
@@ -149,8 +149,12 @@ class Caixa extends AbstractBoleto implements BoletoContract
 
         $nossoNumero = Util::numberFormatGeral($this->gerarNossoNumero(), 17);
         $beneficiario = Util::numberFormatGeral($this->getCodigoCliente(), 6);
+        $beneficiario .= Util::modulo11($beneficiario);
+        if ($this->getCodigoCliente() > 1100000) {
+            $beneficiario = Util::numberFormatGeral($this->getCodigoCliente(), 7);
+        }
 
-        $campoLivre = $beneficiario . Util::modulo11($beneficiario);
+        $campoLivre = $beneficiario;
         $campoLivre .= substr($nossoNumero, 2, 3);
         $campoLivre .= substr($nossoNumero, 0, 1);
         $campoLivre .= substr($nossoNumero, 5, 3);
@@ -167,14 +171,14 @@ class Caixa extends AbstractBoleto implements BoletoContract
      *
      * @return array
      */
-    public static function parseCampoLivre($campoLivre)
-    {
+    public static function parseCampoLivre($campoLivre) {
         return [
             'convenio' => null,
             'agencia' => null,
             'agenciaDv' => null,
             'contaCorrente' => null,
             'contaCorrenteDv' => null,
+            'codigoCliente7' => substr($campoLivre, 0, 7),
             'codigoCliente' => substr($campoLivre, 0, 6),
             'carteira' => substr($campoLivre, 10, 1),
             'nossoNumero' => substr($campoLivre, 7, 3) . substr($campoLivre, 11, 3) . substr($campoLivre, 15, 8),
