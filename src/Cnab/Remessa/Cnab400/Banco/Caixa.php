@@ -117,13 +117,23 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(10, 11, '01');
         $this->add(12, 26, Util::formatCnab('X', 'COBRANCA', 15));
         $this->add(27, 30, Util::formatCnab('9', $this->getAgencia(), 4));
-        $this->add(31, 36, Util::formatCnab('9', $this->getCodigoCliente(), 6));
-        $this->add(37, 46, '');
+        if ($this->isLayout007()) {
+            $this->add(31, 37, Util::formatCnab('9', $this->getCodigoCliente(), 7));
+        } else {
+            $this->add(31, 36, Util::formatCnab('9', $this->getCodigoCliente(), 6));
+            $this->add(37, 37, '');
+        }
+        $this->add(38, 46, '');
         $this->add(47, 76, Util::formatCnab('X', $this->getBeneficiario()->getNome(), 30));
         $this->add(77, 79, $this->getCodigoBanco());
         $this->add(80, 94, Util::formatCnab('X', 'C ECON FEDERAL', 15));
         $this->add(95, 100, $this->getDataRemessa('dmy'));
-        $this->add(101, 389, '');
+        if ($this->isLayout007()) {
+            $this->add(101, 103, '007');
+        } else {
+            $this->add(101, 103, '');
+        }
+        $this->add(104, 389, '');
         $this->add(390, 394, Util::formatCnab('9', $this->getIdremessa(), 5));
         $this->add(395, 400, Util::formatCnab('9', 1, 6));
 
@@ -144,8 +154,13 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(1, 1, '1');
         $this->add(2, 3, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocumento())) == 14 ? '02' : '01');
         $this->add(4, 17, Util::formatCnab('9', Util::onlyNumbers($this->getBeneficiario()->getDocumento()), 14));
-        $this->add(18, 21, Util::formatCnab('9', $this->getAgencia(), 4));
-        $this->add(22, 27, Util::formatCnab('9', $this->getCodigoCliente(), 6));
+        if ($this->isLayout007()) {
+            $this->add(18, 20, '');
+            $this->add(21, 27, Util::formatCnab('9', $this->getCodigoCliente(), 7));
+        } else {
+            $this->add(18, 21, Util::formatCnab('9', $this->getAgencia(), 4));
+            $this->add(22, 27, Util::formatCnab('9', $this->getCodigoCliente(), 6));
+        }
         $this->add(28, 28, '2'); // ‘1’ = Banco Emite ‘2’ = Cliente Emite
         $this->add(29, 29, '0'); // ‘0’ = Postagem pelo Beneficiário ‘1’ = Pagador via Correio ‘2’ = Beneficiário via Agência CAIXA ‘3’ = Pagador via e-mail
         $this->add(30, 31, '00');
@@ -153,13 +168,13 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(57, 73, Util::formatCnab('9', $boleto->getNossoNumero(), 17));
         $this->add(74, 76, '');
         $this->add(77, 106, '');
-        $this->add(107, 108, Util::formatCnab('9', $this->getCarteira(), 2));
+        $this->add(107, 108, Util::formatCnab('9', $this->getCarteiraNumero(), 2));
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
         if ($boleto->getStatus() == $boleto::STATUS_BAIXA) {
             $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
         }
         if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO) {
-            $this->add(109, 110, self::OCORRENCIA_ALT_OUTROS_DADOS);
+            $this->add(109, 110, self::OCORRENCIA_ALT_OUTROS_DADOS); // ALTERAR VENCIMENTO
         }
         if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO_DATA) {
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO);
@@ -169,11 +184,7 @@ class Caixa extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        if ($this->usandoCentavos) {
-            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
-        } else {
-            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
-        }
+        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
         $this->add(140, 142, $this->getCodigoBanco());
         $this->add(143, 147, '00000');
         $this->add(148, 149, $boleto->getEspecieDocCodigo('01', 400));
@@ -232,5 +243,13 @@ class Caixa extends AbstractRemessa implements RemessaContract
         $this->add(395, 400, Util::formatCnab('9', $this->getCount(), 6));
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLayout007()
+    {
+        return $this->getCodigoCliente() > 1100000;
     }
 }

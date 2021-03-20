@@ -1,4 +1,5 @@
 <?php
+
 namespace Eduardokum\LaravelBoleto\Boleto\Banco;
 
 use Eduardokum\LaravelBoleto\Boleto\AbstractBoleto;
@@ -9,13 +10,6 @@ use Eduardokum\LaravelBoleto\Util;
 class Bradesco extends AbstractBoleto implements BoletoContract
 {
     /**
-     * Local de pagamento
-     *
-     * @var string
-     */
-    protected $localPagamento = 'Pagável Preferencialmente na rede Bradesco ou no Bradesco expresso';
-
-    /**
      * Código do banco
      *
      * @var string
@@ -23,11 +17,18 @@ class Bradesco extends AbstractBoleto implements BoletoContract
     protected $codigoBanco = self::COD_BANCO_BRADESCO;
 
     /**
+     * Local de pagamento
+     *
+     * @var string
+     */
+    protected $localPagamento = 'Pagável Preferencialmente na rede Bradesco ou no Bradesco expresso';
+
+    /**
      * Define as carteiras disponíveis para este banco
      *
      * @var array
      */
-    protected $carteiras = ['04', '09', '21', '26'];
+    protected $carteiras = ['02', '04', '09', '21', '26'];
 
     /**
      * Trata-se de código utilizado para identificar mensagens especificas ao cedente, sendo
@@ -54,39 +55,16 @@ class Bradesco extends AbstractBoleto implements BoletoContract
      * @var string
      */
     protected $especiesCodigo240 = [
-        'CH'  => '01', // Cheque
-        'DM'  => '02', // Duplicata Mercantil
-        'DMI' => '03', // Duplicata Mercantil p/ Indicação
-        'DS'  => '04', // Duplicata de Serviço
-        'DSI' => '05', // Duplicata de Serviço p/ Indicação
-        'DR'  => '06', // Duplicata Rural
-        'LC'  => '07', // Letra de Câmbio
-        'NCC' => '08', // Nota de Crédito Comercial
-        'NCE' => '09', // Nota de Crédito a Exportação
-        'NCI' => '10', // Nota de Crédito Industrial
-        'NCR' => '11', // Nota de Crédito Rural
-        'NP'  => '12', // Nota Promissória
-        'NPR' => '13', // Nota Promissória Rural
-        'TM'  => '14', // Triplicata Mercantil
-        'TS'  => '15', // Triplicata de Serviço
-        'NS'  => '16', // Nota de Seguro
-        'RC'  => '17', // Recibo
-        'FAT' => '18', // Fatura
-        'ND'  => '19', // Nota de Débito
-        'AP'  => '20', // Apólice de Seguro
-        'ME'  => '21', // Mensalidade Escolar
-        'PC'  => '22', // Parcela de Consórcio
-        'NF'  => '23', // Nota Fiscal
-        'DD'  => '24', // Documento de Dívida
-        'CPR' => '25', // Cédula de Produto Rural
-        'WAR' => '26', // Warrant
-        'DAE' => '27', // Dívida Ativa do Estado
-        'DAM' => '28', // Dívida Ativa do Município
-        'DAU' => '29', // Dívida Ativa da União
-        'EC'  => '30', // Encargos condominiais
-        'CC'  => '31', // Cartão de Crédito
-        'BDP' => '32', // Boleto de Proposta
-        'O'   => '99', // Outros
+        'DM' => '01', //Duplicata
+        'NP' => '02', //Nota Promissória
+        'NS' => '03', //Nota de Seguro
+        'CS' => '04', //Cobrança Seriada
+        'RC' => '05', //Recibo
+        'LC' => '10', //Letras de Câmbio
+        'ND' => '11', //Nota de Débito
+        'DS' => '12', //Duplicata de Serv.
+        'BP' => '30', //Boleto de Proposta
+        'O'  => '99', //Outros,
     ];
 
     /**
