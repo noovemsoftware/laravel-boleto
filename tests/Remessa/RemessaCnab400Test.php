@@ -270,7 +270,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
                 'agencia' => 1111,
                 'conta' => 123456,
-                'carteira' => 'RG',
+                'carteira' => '01',
                 'codigoCliente' => 999999,
                 'descricaoDemonstrativo' => ['demonstrativo 1', 'demonstrativo 2', 'demonstrativo 3'],
                 'instrucoes' =>  ['instrucao 1', 'instrucao 2', 'instrucao 3'],
@@ -284,7 +284,7 @@ class RemessaCnab400Test extends TestCase
                 'agencia' => 1111,
                 'conta' => 123456,
                 'idremessa' => 1,
-                'carteira' => 'RG',
+                'carteira' => '01',
                 'codigoCliente' => 999999,
                 'beneficiario' => self::$beneficiario,
             ]
@@ -412,7 +412,7 @@ class RemessaCnab400Test extends TestCase
                 'pagador' => self::$pagador,
                 'beneficiario' => self::$beneficiario,
                 'diasBaixaAutomatica' => 15,
-                'carteira' => 101,
+                'carteira' => '101',
                 'agencia' => 1111,
                 'conta' => 99999999,
                 'descricaoDemonstrativo' => ['demonstrativo 1', 'demonstrativo 2', 'demonstrativo 3'],
@@ -425,7 +425,7 @@ class RemessaCnab400Test extends TestCase
         $remessa = new Remessa\Santander(
             [
                 'agencia' => 1111,
-                'carteira' => 101,
+                'carteira' => 5,
                 'conta' => 99999999,
                 'codigoCliente' => 12345678,
                 'beneficiario' => self::$beneficiario,

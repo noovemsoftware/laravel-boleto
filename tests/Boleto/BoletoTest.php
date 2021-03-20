@@ -300,7 +300,7 @@ class BoletoTest extends TestCase
                 'beneficiario' => self::$beneficiario,
                 'agencia' => 1111,
                 'conta' => 123456,
-                'carteira' => 'RG',
+                'carteira' => '01',
                 'codigoCliente' => 999999,
                 'descricaoDemonstrativo' => ['demonstrativo 1', 'demonstrativo 2', 'demonstrativo 3'],
                 'instrucoes' =>  ['instrucao 1', 'instrucao 2', 'instrucao 3'],
@@ -455,7 +455,7 @@ class BoletoTest extends TestCase
         $this->assertNotNull($boleto->renderHTML());
         $this->assertNotNull($boleto->renderPDF());
     }
-    
+
     public function testBoletoBnb()
     {
         $boleto = new Boleto\Bnb(
