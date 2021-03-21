@@ -263,13 +263,19 @@ class Santander extends AbstractRetorno implements RetornoCnab400
     protected function init()
     {
         $this->totais = [
-            'valor_recebido' => 0,
-            'liquidados' => 0,
-            'entradas' => 0,
-            'baixados' => 0,
-            'protestados' => 0,
-            'erros' => 0,
-            'alterados' => 0,
+            'qtdTitulos' => 0,
+            'vlrTitulos' => 0,
+            'qtdLiquidados' => 0,
+            'vlrLiquidados' => 0,
+            'qtdEntradas' => 0,
+            'vlrEntradas' => 0,
+            'qtdBaixados' => 0,
+            'vlrBaixados' => 0,
+            'qtdProtestados' => 0,
+            'vlrProtestados' => 0,
+            'qtdAlterados' => 0,
+            'vlrAlterados' => 0,
+            'qtdErros' => 0,
         ];
     }
 
@@ -350,22 +356,27 @@ class Santander extends AbstractRetorno implements RetornoCnab400
         $this->totais['valor_recebido'] += $d->getValorRecebido();
 
         if ($d->hasOcorrencia('06', '07', '08', '16', '17')) {
-            $this->totais['liquidados']++;
+            $this->totais['qtdLiquidados']++;
+            $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
         } elseif ($d->hasOcorrencia('02')) {
-            $this->totais['entradas']++;
+            $this->totais['qtdEntradas']++;
+            $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
         } elseif ($d->hasOcorrencia('09', '10', '93')) {
-            $this->totais['baixados']++;
+            $this->totais['qtdBaixados']++;
+            $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
         } elseif ($d->hasOcorrencia('15')) {
-            $this->totais['protestados']++;
+            $this->totais['qtdProtestados']++;
+            $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
         } elseif ($d->hasOcorrencia('14', '61', '62', '63')) {
-            $this->totais['alterados']++;
+            $this->totais['qtdAlterados']++;
+            $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
         } elseif ($d->hasOcorrencia('03')) {
-            $this->totais['erros']++;
+            $this->totais['qtdErros']++;
             $grupoErro = $this->rem(135, 136, $detalhe);
             $errorsRetorno = str_split(sprintf('%09s', $this->rem(137, 145, $detalhe)), 3) + array_fill(0, 3, '');
             $error = [];
@@ -380,6 +391,9 @@ class Santander extends AbstractRetorno implements RetornoCnab400
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
         }
 
+        $this->totais['qtdTitulos']++;
+        $this->totais['vlrTitulos'] += $d->getValor();
+
         return true;
     }
 
@@ -391,16 +405,31 @@ class Santander extends AbstractRetorno implements RetornoCnab400
     protected function processarTrailer(array $trailer)
     {
         $totais = $this->getTrailer()
-        ->setQuantidadeTitulos((int) $this->count())
-        ->setQuantidadeErros((int) $this->totais['erros'])
-        ->setQuantidadeEntradas((int) $this->totais['entradas'])
-        ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
-        ->setQuantidadeBaixados((int) $this->totais['baixados'])
-        ->setQuantidadeAlterados((int) $this->totais['alterados']);
+            ->setQuantidadeEmCarteira((int) $this->rem(18, 25, $trailer))
+            ->setQuantidadeTitulos((int) $this->totais['qtdTitulos'])
+            ->setQuantidadeLiquidados((int) $this->totais['qtdLiquidados'])
+            ->setQuantidadeEntradas((int) $this->totais['qtdEntradas'])
+            ->setQuantidadeBaixados((int) $this->totais['qtdBaixados'])
+            ->setQuantidadeAlterados((int) $this->totais['qtdAlterados'])
+            ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['qtdProtestados'])
+            ->setQuantidadeErros((int) $this->totais['qtdErros']);
+
         if ($this->usandoCentavos) {
-            $totais->setValorTitulos($this->totais['valor_recebido']);
+            $totais->setValorEmCarteira((int) $this->rem(26, 39, $trailer))
+                ->setValorTitulos((int) $this->totais['vlrTitulos'])
+                ->setValorLiquidados((int) $this->totais['vlrLiquidados'])
+                ->setValorEntradas((int) $this->totais['vlrEntradas'])
+                ->setValorBaixados((int) $this->totais['vlrBaixados'])
+                ->setValorAlterados((int) $this->totais['vlrAlterados'])
+                ->setValorConfirmacaoInstrucaoProtestos((int) $this->totais['vlrProtestados']);
         } else {
-            $totais->setValorTitulos(Util::nFloat($this->totais['valor_recebido'] / 100, 2, false));
+            $totais->setValorEmCarteira((float) Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false))
+                ->setValorTitulos((float) Util::nFloat($this->totais['vlrTitulos'] / 100, 2, false))
+                ->setValorLiquidados((float) Util::nFloat($this->totais['vlrLiquidados'] / 100, 2, false))
+                ->setValorEntradas((float) Util::nFloat($this->totais['vlrEntradas'] / 100, 2, false))
+                ->setValorBaixados((float) Util::nFloat($this->totais['vlrBaixados'] / 100, 2, false))
+                ->setValorAlterados((float) Util::nFloat($this->totais['vlrAlterados'] / 100, 2, false))
+                ->setValorConfirmacaoInstrucaoProtestos((float) Util::nFloat($this->totais['vlrProtestados'] / 100, 2, false));
         }
 
         return true;

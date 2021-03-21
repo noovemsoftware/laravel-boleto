@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Eduardokum\LaravelBoleto\Cnab\Remessa\Cnab400\Banco;
 
 use Eduardokum\LaravelBoleto\Cnab\Remessa\Cnab400\AbstractRemessa;
@@ -269,10 +268,14 @@ class Banrisul extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
+        } else {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        }
         $this->add(140, 142, $this->getCodigoBanco());
         $this->add(143, 147, '');
-        $this->add(148, 149, $this->isCarteiraRSX() ? '' : self::TIPO_COBRANCA_CREDENCIADA);
+        $this->add(148, 149, $this->isCarteiraRSX(['N']) ? '' : self::TIPO_COBRANCA_CREDENCIADA);
         $this->add(150, 150, $boleto->getAceite());
         $this->add(151, 156, $boleto->getDataDocumento()->format('dmy'));
         $this->add(157, 158, self::INSTRUCAO_SEM);
@@ -286,14 +289,20 @@ class Banrisul extends AbstractRemessa implements RemessaContract
             $this->add(159, 160, self::INSTRUCAO_MULTA_XX);
         }
         $this->add(161, 161, 0);
-        $this->add(162, 173, Util::formatCnab('9', $boleto->getMoraDia(), 12, 2));
+        if ($this->usandoCentavos) {
+            $this->add(162, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+        } else {
+            $this->add(162, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        }
         $this->add(174, 192, '');
-
-		if ($boleto->getDesconto() > 0) {
-			$this->add(174, 179, $boleto->getDataDesconto()->format('dmy'));
-			$this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
-		}
-
+        if ($boleto->getDesconto() > 0) {
+            $this->add(174, 179, $boleto->getDataDesconto()->format('dmy'));
+            if ($this->usandoCentavos) {
+                $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+            } else {
+                $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+            }
+        }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
         $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '02' : '01');
@@ -308,12 +317,12 @@ class Banrisul extends AbstractRemessa implements RemessaContract
         $this->add(335, 349, Util::formatCnab('X', $boleto->getPagador()->getCidade(), 15));
         $this->add(350, 351, Util::formatCnab('X', $boleto->getPagador()->getUf(), 2));
 
-        if ($this->isCarteiraRSX()){
+        if ($this->isCarteiraRSX(['N'])) {
             $this->add(352, 371, '');
-        }else{
+        } else {
             $this->add(352, 355, '');
-            $this->add(356, 357, '');
-            $this->add(358, 369, '');
+            $this->add(356, 356, '');
+            $this->add(357, 369, '');
             $this->add(370, 371, Util::formatCnab('9', $boleto->getDiasProtesto($boleto->getDiasBaixaAutomatica()), 2));
         }
 

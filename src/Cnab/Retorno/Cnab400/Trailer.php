@@ -26,6 +26,16 @@ class Trailer implements TrailerContract
     /**
      * @var int
      */
+    protected $quantidadeEmCarteira = 0;
+
+    /**
+     * @var float
+     */
+    protected $valorEmCarteira = 0;
+
+    /**
+     * @var int
+     */
     protected $quantidadeLiquidados = 0;
 
     /**
@@ -48,6 +58,11 @@ class Trailer implements TrailerContract
      * @var int
      */
     protected $quantidadeEntradas = 0;
+
+    /**
+     * @var int
+     */
+    protected $valorEntradas = 0;
 
     /**
      * @var int
@@ -164,7 +179,45 @@ class Trailer implements TrailerContract
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getQuantidadeEmCarteira()
+    {
+        return $this->quantidadeEmCarteira;
+    }
 
+    /**
+     * @param int $quantidade
+     *
+     * @return Trailer
+     */
+    public function setQuantidadeEmCarteira($quantidade)
+    {
+        $this->quantidadeEmCarteira = $quantidade;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValorEmCarteira()
+    {
+        return $this->valorEmCarteira;
+    }
+
+    /**
+     * @param int $quantidade
+     *
+     * @return Trailer
+     */
+    public function setValorEmCarteira($valor)
+    {
+        $this->valorEmCarteira = $valor;
+
+        return $this;
+    }
 
     /**
      * @return int
@@ -193,9 +246,9 @@ class Trailer implements TrailerContract
      */
     public function setValorLiquidados($valorLiquidados)
     {
-      $this->valorLiquidados = $valorLiquidados;
+        $this->valorLiquidados = $valorLiquidados;
 
-      return $this;
+        return $this;
     }
 
     /**
@@ -203,7 +256,7 @@ class Trailer implements TrailerContract
      */
     public function getValorLiquidados()
     {
-      return $this->valorLiquidados;
+        return $this->valorLiquidados;
     }
 
     /**
@@ -353,8 +406,8 @@ class Trailer implements TrailerContract
      */
     public function setQuantidadeAbatimentosConcedidos($quantidade)
     {
-      $this->quantidadeAbatimentosConcedidos = $quantidade;
-      return $this;
+        $this->quantidadeAbatimentosConcedidos = $quantidade;
+        return $this;
     }
 
     /**
@@ -362,7 +415,7 @@ class Trailer implements TrailerContract
      */
     public function getQuantidadeAbatimentosConcedidos()
     {
-      return $this->quantidadeAbatimentosConcedidos;
+        return $this->quantidadeAbatimentosConcedidos;
     }
 
     /**
@@ -372,8 +425,8 @@ class Trailer implements TrailerContract
      */
     public function setValorAbatimentosConcedidos($valor)
     {
-      $this->valorAbatimentosConcedidos = $valor;
-      return $this;
+        $this->valorAbatimentosConcedidos = $valor;
+        return $this;
     }
 
     /**
@@ -381,7 +434,7 @@ class Trailer implements TrailerContract
      */
     public function getValorAbatimentosConcedidos()
     {
-      return $this->valorAbatimentosConcedidos;
+        return $this->valorAbatimentosConcedidos;
     }
 
     /**
@@ -391,8 +444,8 @@ class Trailer implements TrailerContract
      */
     public function setQuantidadeAbatimentosCancelados($quantidade)
     {
-      $this->quantidadeAbatimentosCancelados = $quantidade;
-      return $this;
+        $this->quantidadeAbatimentosCancelados = $quantidade;
+        return $this;
     }
 
     /**
@@ -400,7 +453,7 @@ class Trailer implements TrailerContract
      */
     public function getQuantidadeAbatimentosCancelados()
     {
-      return $this->quantidadeAbatimentosCancelados;
+        return $this->quantidadeAbatimentosCancelados;
     }
 
     /**
@@ -410,8 +463,8 @@ class Trailer implements TrailerContract
      */
     public function setValorAbatimentosCancelados($valor)
     {
-      $this->valorAbatimentosCancelados = $valor;
-      return $this;
+        $this->valorAbatimentosCancelados = $valor;
+        return $this;
     }
 
     /**
@@ -419,7 +472,7 @@ class Trailer implements TrailerContract
      */
     public function getValorAbatimentosCancelados()
     {
-      return $this->valorAbatimentosCancelados;
+        return $this->valorAbatimentosCancelados;
     }
 
     /**
@@ -429,8 +482,8 @@ class Trailer implements TrailerContract
      */
     public function setQuantidadeConfirmacaoInstrucaoProtestos($quantidade)
     {
-      $this->quantidadeConfirmacaoInstrucaoProtestos = $quantidade;
-      return $this;
+        $this->quantidadeConfirmacaoInstrucaoProtestos = $quantidade;
+        return $this;
     }
 
     /**
@@ -438,7 +491,7 @@ class Trailer implements TrailerContract
      */
     public function getQuantidadeConfirmacaoInstrucaoProtestos()
     {
-      return $this->quantidadeConfirmacaoInstrucaoProtestos;
+        return $this->quantidadeConfirmacaoInstrucaoProtestos;
     }
 
     /**
@@ -448,8 +501,8 @@ class Trailer implements TrailerContract
      */
     public function setValorConfirmacaoInstrucaoProtestos($valor)
     {
-      $this->valorConfirmacaoInstrucaoProtestos = $valor;
-      return $this;
+        $this->valorConfirmacaoInstrucaoProtestos = $valor;
+        return $this;
     }
 
     /**
@@ -457,7 +510,7 @@ class Trailer implements TrailerContract
      */
     public function getValorConfirmacaoInstrucaoProtestos()
     {
-      return $this->valorConfirmacaoInstrucaoProtestos;
+        return $this->valorConfirmacaoInstrucaoProtestos;
     }
 
     /**
@@ -467,8 +520,8 @@ class Trailer implements TrailerContract
      */
     public function setQuantidadeRateiosEfetuados($quantidade)
     {
-      $this->quantidadeRateiosEfetuados = $quantidade;
-      return $this;
+        $this->quantidadeRateiosEfetuados = $quantidade;
+        return $this;
     }
 
     /**
@@ -476,7 +529,7 @@ class Trailer implements TrailerContract
      */
     public function getQuantidadeRateiosEfetuados()
     {
-      return $this->quantidadeRateiosEfetuados;
+        return $this->quantidadeRateiosEfetuados;
     }
 
     /**
@@ -486,8 +539,8 @@ class Trailer implements TrailerContract
      */
     public function setValorRateiosEfetuados($valor)
     {
-      $this->valorRateiosEfetuados = $valor;
-      return $this;
+        $this->valorRateiosEfetuados = $valor;
+        return $this;
     }
 
     /**
@@ -495,7 +548,6 @@ class Trailer implements TrailerContract
      */
     public function getValorRateiosEfetuados()
     {
-      return $this->valorRateiosEfetuados;
+        return $this->valorRateiosEfetuados;
     }
-
 }

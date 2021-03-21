@@ -118,16 +118,19 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
     protected function init()
     {
         $this->totais = [
-            'liquidados' => 0,
-            'entradas' => 0,
-            'baixados' => 0,
-            'protestados' => 0,
-            'erros' => 0,
-            'alterados' => 0,
-            'abatimentosConcedidos' => 0,
-            'abatimentosCancelados' => 0,
-            'ciProtestos' => 0,
-            'rateios' => 0
+            'qtdTitulos' => 0,
+            'vlrTitulos' => 0,
+            'qtdLiquidados' => 0,
+            'vlrLiquidados' => 0,
+            'qtdEntradas' => 0,
+            'vlrEntradas' => 0,
+            'qtdBaixados' => 0,
+            'vlrBaixados' => 0,
+            'qtdProtestados' => 0,
+            'vlrProtestados' => 0,
+            'qtdAlterados' => 0,
+            'vlrAlterados' => 0,
+            'qtdErros' => 0
         ];
     }
 
@@ -202,22 +205,27 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
 
         $msgAdicional = str_split(sprintf('%08s', $this->rem(319, 328, $detalhe)), 2) + array_fill(0, 5, '');
         if ($d->hasOcorrencia('06', '15', '16', '17')) {
-            $this->totais['liquidados']++;
+            $this->totais['qtdLiquidados']++;
+            $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
         } elseif ($d->hasOcorrencia('02')) {
-            $this->totais['entradas']++;
+            $this->totais['qtdEntradas']++;
+            $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
         } elseif ($d->hasOcorrencia('09', '10')) {
-            $this->totais['baixados']++;
+            $this->totais['qtdBaixados']++;
+            $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
         } elseif ($d->hasOcorrencia('23')) {
-            $this->totais['protestados']++;
+            $this->totais['qtdProtestados']++;
+            $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
         } elseif ($d->hasOcorrencia('14')) {
-            $this->totais['alterados']++;
+            $this->totais['qtdAlterados']++;
+            $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
         } elseif ($d->hasOcorrencia('03', '24', '27', '30', '32')) {
-            $this->totais['erros']++;
+            $this->totais['qtdErros']++;
             $error = Util::appendStrings(
                 Arr::get($this->rejeicoes, $msgAdicional[0], ''),
                 Arr::get($this->rejeicoes, $msgAdicional[1], ''),
@@ -235,6 +243,9 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
         }
 
+        $this->totais['qtdTitulos']++;
+        $this->totais['vlrTitulos'] += $d->getValor();
+
         return true;
     }
 
@@ -247,38 +258,31 @@ class Bradesco extends AbstractRetorno implements RetornoCnab400
     protected function processarTrailer(array $trailer)
     {
         $totais = $this->getTrailer()
-            ->setQuantidadeTitulos($this->rem(18, 25, $trailer)) // titulos em cobranca
-            ->setQuantidadeErros((int) $this->totais['erros'])
-            ->setQuantidadeEntradas((int) $this->totais['entradas'])
-            ->setQuantidadeLiquidados((int) $this->totais['liquidados'])
-            ->setQuantidadeBaixados((int) $this->totais['baixados'])
-            ->setQuantidadeAbatimentosCancelados((int) $this->totais['abatimentosCancelados'])
-            ->setQuantidadeAlterados((int) $this->totais['alterados']) // vencimentos alterados
-            ->setQuantidadeAbatimentosConcedidos((int) $this->totais['abatimentosConcedidos'])
-            ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['protestados'])
-            ->setQuantidadeRateiosEfetuados((int) $this->totais['rateios']);
+            ->setQuantidadeEmCarteira((int) $this->rem(18, 25, $trailer))
+            ->setQuantidadeTitulos((int) $this->totais['qtdTitulos'])
+            ->setQuantidadeLiquidados((int) $this->totais['qtdLiquidados'])
+            ->setQuantidadeEntradas((int) $this->totais['qtdEntradas'])
+            ->setQuantidadeBaixados((int) $this->totais['qtdBaixados'])
+            ->setQuantidadeAlterados((int) $this->totais['qtdAlterados'])
+            ->setQuantidadeConfirmacaoInstrucaoProtestos((int) $this->totais['qtdProtestados'])
+            ->setQuantidadeErros((int) $this->totais['qtdErros']);
 
-        // adicionado pra garantir o uso de centavos sem a necessidade de conversoes
         if ($this->usandoCentavos) {
-            $totais->setValorTitulos($this->rem(26, 39, $trailer)) // titulos em cobranca
-                ->setValorEntradas($this->rem(63, 74, $trailer))
-                ->setValorLiquidados($this->rem(75, 86, $trailer))
-                ->setValorBaixados($this->rem(109, 120, $trailer))
-                ->setValorAbatimentosCancelados($this->rem(126, 137, $trailer))
-                ->setValorAlterados($this->rem(143, 154, $trailer)) // vencimentos alterados
-                ->setValorAbatimentosConcedidos($this->rem(160, 171, $trailer))
-                ->setValorConfirmacaoInstrucaoProtestos($this->rem(177, 188, $trailer))
-                ->setValorRateiosEfetuados($this->rem(363, 377, $trailer));
+            $totais->setValorEmCarteira((int) $this->rem(26, 39, $trailer))
+                ->setValorTitulos((int) $this->totais['vlrTitulos'])
+                ->setValorLiquidados((int) $this->totais['vlrLiquidados'])
+                ->setValorEntradas((int) $this->totais['vlrEntradas'])
+                ->setValorBaixados((int) $this->totais['vlrBaixados'])
+                ->setValorAlterados((int) $this->totais['vlrAlterados'])
+                ->setValorConfirmacaoInstrucaoProtestos((int) $this->totais['vlrProtestados']);
         } else {
-            $totais->setValorTitulos(Util::nFloat($this->rem(26, 39, $trailer)/100, 2, false)) // titulos em cobranca
-                ->setValorEntradas(Util::nFloat($this->rem(63, 74, $trailer)/100, 2, false))
-                ->setValorLiquidados(Util::nFloat($this->rem(75, 86, $trailer)/100, 2, false))
-                ->setValorBaixados(Util::nFloat($this->rem(109, 120, $trailer)/100, 2, false))
-                ->setValorAbatimentosCancelados(Util::nFloat($this->rem(126, 137, $trailer)/100, 2, false))
-                ->setValorAlterados(Util::nFloat($this->rem(143, 154, $trailer)/100, 2, false)) // vencimentos alterados
-                ->setValorAbatimentosConcedidos(Util::nFloat($this->rem(160, 171, $trailer)/100, 2, false))
-                ->setValorConfirmacaoInstrucaoProtestos(Util::nFloat($this->rem(177, 188, $trailer)/100, 2, false))
-                ->setValorRateiosEfetuados(Util::nFloat($this->rem(363, 377, $trailer)/100, 2, false));
+            $totais->setValorEmCarteira((float) Util::nFloat($this->rem(26, 39, $trailer) / 100, 2, false))
+                ->setValorTitulos((float) Util::nFloat($this->totais['vlrTitulos'] / 100, 2, false))
+                ->setValorLiquidados((float) Util::nFloat($this->totais['vlrLiquidados'] / 100, 2, false))
+                ->setValorEntradas((float) Util::nFloat($this->totais['vlrEntradas'] / 100, 2, false))
+                ->setValorBaixados((float) Util::nFloat($this->totais['vlrBaixados'] / 100, 2, false))
+                ->setValorAlterados((float) Util::nFloat($this->totais['vlrAlterados'] / 100, 2, false))
+                ->setValorConfirmacaoInstrucaoProtestos((float) Util::nFloat($this->totais['vlrProtestados'] / 100, 2, false));
         }
 
         return true;

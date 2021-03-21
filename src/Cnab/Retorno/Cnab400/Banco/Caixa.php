@@ -93,6 +93,8 @@ class Caixa extends AbstractRetorno implements RetornoCnab400
     protected function init()
     {
         $this->totais = [
+            'qtdTitulos' => 0,
+            'vlrTitulos' => 0,
             'qtdLiquidados' => 0,
             'vlrLiquidados' => 0,
             'qtdEntradas' => 0,
@@ -198,6 +200,9 @@ class Caixa extends AbstractRetorno implements RetornoCnab400
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
         }
 
+        $this->totais['qtdTitulos']++;
+        $this->totais['vlrTitulos'] += $d->getValor();
+
         return true;
     }
 
@@ -209,7 +214,7 @@ class Caixa extends AbstractRetorno implements RetornoCnab400
     protected function processarTrailer(array $trailer)
     {
         $totais = $this->getTrailer()
-            ->setQuantidadeTitulos((int) $this->count())
+            ->setQuantidadeTitulos((int) $this->totais['qtdTitulos'])
             ->setQuantidadeLiquidados((int) $this->totais['qtdLiquidados'])
             ->setQuantidadeEntradas((int) $this->totais['qtdEntradas'])
             ->setQuantidadeBaixados((int) $this->totais['qtdBaixados'])
@@ -218,13 +223,15 @@ class Caixa extends AbstractRetorno implements RetornoCnab400
             ->setQuantidadeErros((int) $this->totais['qtdErros']);
 
         if ($this->usandoCentavos) {
-            $totais->setValorLiquidados((int) $this->totais['vlrLiquidados'])
+            $totais->setValorTitulos((int) $this->totais['vlrTitulos'])
+                ->setValorLiquidados((int) $this->totais['vlrLiquidados'])
                 ->setValorEntradas((int) $this->totais['vlrEntradas'])
                 ->setValorBaixados((int) $this->totais['vlrBaixados'])
                 ->setValorAlterados((int) $this->totais['vlrAlterados'])
                 ->setValorConfirmacaoInstrucaoProtestos((int) $this->totais['vlrProtestados']);
         } else {
-            $totais->setValorLiquidados((float) Util::nFloat($this->totais['vlrLiquidados'] / 100, 2, false))
+            $totais->setValorTitulos((float) Util::nFloat($this->totais['vlrTitulos'] / 100, 2, false))
+                ->setValorLiquidados((float) Util::nFloat($this->totais['vlrLiquidados'] / 100, 2, false))
                 ->setValorEntradas((float) Util::nFloat($this->totais['vlrEntradas'] / 100, 2, false))
                 ->setValorBaixados((float) Util::nFloat($this->totais['vlrBaixados'] / 100, 2, false))
                 ->setValorAlterados((float) Util::nFloat($this->totais['vlrAlterados'] / 100, 2, false))
