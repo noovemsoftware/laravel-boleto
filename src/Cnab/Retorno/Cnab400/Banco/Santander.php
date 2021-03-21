@@ -353,8 +353,6 @@ class Santander extends AbstractRetorno implements RetornoCnab400
                 ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false));
         }
 
-        $this->totais['valor_recebido'] += $d->getValorRecebido();
-
         if ($d->hasOcorrencia('06', '07', '08', '16', '17')) {
             $this->totais['qtdLiquidados']++;
             $this->totais['vlrLiquidados'] += $d->getValorRecebido();

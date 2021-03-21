@@ -99,7 +99,7 @@ class RemessaCnab400Test extends TestCase
             ]
         );
 
-        $boleto2 = $boleto;
+        $boleto2 = clone $boleto;
         $boleto2->setNumeroDocumento(2);
 
         $remessa = new Remessa\Banrisul(
