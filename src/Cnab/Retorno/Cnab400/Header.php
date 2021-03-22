@@ -222,7 +222,7 @@ class Header implements HeaderContract
     public function getData($format = 'd/m/Y')
     {
         return $this->data instanceof Carbon
-            ? $format === false ? $this->data : $this->data->format($format)
+            ? ($format === false ? $this->data : $this->data->format($format))
             : null;
     }
 

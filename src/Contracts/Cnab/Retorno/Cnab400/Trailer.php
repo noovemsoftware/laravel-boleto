@@ -26,6 +26,11 @@ interface Trailer
     /**
      * @return mixed
      */
+    public function getQuantidadeConfirmacaoInstrucaoProtestos();
+
+    /**
+     * @return mixed
+     */
     public function getQuantidadeBaixados();
 
     /**
@@ -41,7 +46,42 @@ interface Trailer
     /**
      * @return mixed
      */
+    public function getQuantidadeEmCarteira();
+
+    /**
+     * @return mixed
+     */
     public function getQuantidadeErros();
+
+    /**
+     * @return mixed
+     */
+    public function getValorEntradas();
+
+    /**
+     * @return mixed
+     */
+    public function getValorLiquidados();
+
+    /**
+     * @return mixed
+     */
+    public function getValorConfirmacaoInstrucaoProtestos();
+
+    /**
+     * @return mixed
+     */
+    public function getValorBaixados();
+
+    /**
+     * @return mixed
+     */
+    public function getValorAlterados();
+
+    /**
+     * @return mixed
+     */
+    public function getValorEmCarteira();
 
     /**
      * @return array
