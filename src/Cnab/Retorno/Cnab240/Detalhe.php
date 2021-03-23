@@ -281,7 +281,7 @@ class Detalhe implements DetalheContract
     public function getDataVencimento($format = 'd/m/Y')
     {
         return $this->dataVencimento instanceof Carbon
-            ? $format === false ? $this->dataVencimento : $this->dataVencimento->format($format)
+            ? ($format === false ? $this->dataVencimento : $this->dataVencimento->format($format))
             : null;
     }
 
@@ -307,7 +307,7 @@ class Detalhe implements DetalheContract
     public function getDataCredito($format = 'd/m/Y')
     {
         return $this->dataCredito instanceof Carbon
-            ? $format === false ? $this->dataCredito : $this->dataCredito->format($format)
+            ? ($format === false ? $this->dataCredito : $this->dataCredito->format($format))
             : null;
     }
 
@@ -333,7 +333,7 @@ class Detalhe implements DetalheContract
     public function getDataOcorrencia($format = 'd/m/Y')
     {
         return $this->dataOcorrencia instanceof Carbon
-            ? $format === false ? $this->dataOcorrencia : $this->dataOcorrencia->format($format)
+            ? ($format === false ? $this->dataOcorrencia : $this->dataOcorrencia->format($format))
             : null;
     }
 
@@ -347,6 +347,29 @@ class Detalhe implements DetalheContract
     public function setDataOcorrencia($dataOcorrencia, $format = 'dmY')
     {
         $this->dataOcorrencia = trim($dataOcorrencia, '0 ') ? Carbon::createFromFormat($format, $dataOcorrencia) : null;
+
+        return $this;
+    }
+
+    /**
+     * Getter for codigoLiquidacao
+     *
+     * @return string
+     */
+    public function getCodigoLiquidacao()
+    {
+        return $this->codigoLiquidacao;
+    }
+
+    /**
+     * Setter for codigoLiquidacao
+     *
+     * @param string $codigoLiquidacao
+     * @return Detalhe
+     */
+    public function setCodigoLiquidacao($codigoLiquidacao)
+    {
+        $this->codigoLiquidacao = $codigoLiquidacao;
 
         return $this;
     }
@@ -512,6 +535,46 @@ class Detalhe implements DetalheContract
     }
 
     /**
+     * @param string $valorOutrasDespesas
+     *
+     * @return Detalhe
+     */
+    public function setValorOutrasDespesas($valorOutrasDespesas)
+    {
+        $this->valorOutrasDespesas = $valorOutrasDespesas;
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getValorOutrasDespesas()
+    {
+        return $this->valorOutrasDespesas;
+    }
+
+    /**
+     * @param string $valorOutrasReceitas
+     *
+     * @return Detalhe
+     */
+    public function setValorOutrasReceitas($valorOutrasReceitas)
+    {
+        $this->valorOutrasReceitas = $valorOutrasReceitas;
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getValorOutrasReceitas()
+    {
+        return $this->valorOutrasReceitas;
+    }
+
+    /**
      * @return PessoaContract
      */
     public function getPagador()
@@ -582,7 +645,7 @@ class Detalhe implements DetalheContract
 
         return $this;
     }
-    
+
      /**
   * @return string
   */
