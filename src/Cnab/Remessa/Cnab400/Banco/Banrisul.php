@@ -288,11 +288,11 @@ class Banrisul extends AbstractRemessa implements RemessaContract
         if ($boleto->getMulta() > 0) {
             $this->add(159, 160, self::INSTRUCAO_MULTA_XX);
         }
-        $this->add(161, 161, 0);
+        $this->add(161, 161, $this->isCarteiraRSX(['N']) ? '' : 0);
         if ($this->usandoCentavos) {
-            $this->add(162, 173, Util::formatCnab('9', $boleto->getMoraDia(), 12));
+            $this->add(162, 173, $this->isCarteiraRSX(['N']) ? '' : Util::formatCnab('9', $boleto->getMoraDia(), 12));
         } else {
-            $this->add(162, 173, Util::formatCnab('9', $boleto->getMoraDia(), 12, 2));
+            $this->add(162, 173, $this->isCarteiraRSX(['N']) ? '' : Util::formatCnab('9', $boleto->getMoraDia(), 12, 2));
         }
         $this->add(174, 192, '');
         if ($boleto->getDesconto() > 0) {
