@@ -228,7 +228,7 @@ class Banrisul extends AbstractRetorno implements RetornoCnab400
          * ocorrencias
          */
         $msgAdicional = str_split(sprintf('%010s', $this->rem(383, 392, $detalhe)), 2) + array_fill(0, 5, '');
-        if ($d->hasOcorrencia('06', '25', '08')) {
+        if ($d->hasOcorrencia('04', '06', '07', '08', '15', '25')) {
             $this->totais['qtdLiquidados']++;
             $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $ocorrencia = Util::appendStrings(
@@ -245,7 +245,7 @@ class Banrisul extends AbstractRetorno implements RetornoCnab400
             $this->totais['qtdEntradas']++;
             $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
-        } elseif ($d->hasOcorrencia('04', '08', '10')) {
+        } elseif ($d->hasOcorrencia('09', '10', '26', '40')) {
             $this->totais['qtdBaixados']++;
             $this->totais['vlrBaixados'] += $d->getValor();
             $ocorrencia = Util::appendStrings(
@@ -258,7 +258,7 @@ class Banrisul extends AbstractRetorno implements RetornoCnab400
             );
             $d->setOcorrenciaDescricao($ocorrencia);
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
-        } elseif ($d->hasOcorrencia('40')) {
+        } elseif ($d->hasOcorrencia('23')) {
             $this->totais['qtdProtestados']++;
             $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
