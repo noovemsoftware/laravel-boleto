@@ -306,7 +306,7 @@ class Detalhe implements DetalheContract
     public function getDataOcorrencia($format = 'd/m/Y')
     {
         return $this->dataOcorrencia instanceof Carbon
-        ? $format === false ? $this->dataOcorrencia : $this->dataOcorrencia->format($format)
+        ? ($format === false ? $this->dataOcorrencia : $this->dataOcorrencia->format($format))
         : null;
     }
 
@@ -350,7 +350,7 @@ class Detalhe implements DetalheContract
     public function getDataVencimento($format = 'd/m/Y')
     {
         return $this->dataVencimento instanceof Carbon
-        ? $format === false ? $this->dataVencimento : $this->dataVencimento->format($format)
+        ? ($format === false ? $this->dataVencimento : $this->dataVencimento->format($format))
         : null;
     }
 
@@ -374,7 +374,7 @@ class Detalhe implements DetalheContract
     public function getDataCredito($format = 'd/m/Y')
     {
         return $this->dataCredito instanceof Carbon
-        ? $format === false ? $this->dataCredito : $this->dataCredito->format($format)
+        ? ($format === false ? $this->dataCredito : $this->dataCredito->format($format))
         : null;
     }
 
