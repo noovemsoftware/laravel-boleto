@@ -249,21 +249,21 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
         if ($this->usandoCentavos) {
-            $d->setValor($this->rem(153, 165, $detalhe))
-                ->setValorTarifa($this->rem(176, 188, $detalhe))
-                ->setValorAbatimento($this->rem(228, 240, $detalhe))
-                ->setValorDesconto($this->rem(241, 253, $detalhe))
-                ->setValorRecebido($this->rem(254, 266, $detalhe))
-                ->setValorMora($this->rem(267, 279, $detalhe))
-                ->setValorMulta($this->rem(280, 292, $detalhe));
+            $d->setValor((int) $this->rem(153, 165, $detalhe))
+                ->setValorTarifa((int) $this->rem(176, 188, $detalhe))
+                ->setValorAbatimento((int) $this->rem(228, 240, $detalhe))
+                ->setValorDesconto((int) $this->rem(241, 253, $detalhe))
+                ->setValorRecebido((int) $this->rem(254, 266, $detalhe))
+                ->setValorMora((int) $this->rem(267, 279, $detalhe))
+                ->setValorMulta((int) $this->rem(280, 292, $detalhe));
         } else {
-            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe), 2, false) / 100)
-                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe), 2, false) / 100)
-                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe), 2, false) / 100)
-                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe), 2, false) / 100)
-                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe), 2, false) / 100)
-                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe), 2, false) / 100)
-                ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe), 2, false) / 100);
+            $d->setValor((float) Util::nFloat($this->rem(153, 165, $detalhe), 2, false) / 100)
+                ->setValorTarifa((float) Util::nFloat($this->rem(176, 188, $detalhe), 2, false) / 100)
+                ->setValorAbatimento((float) Util::nFloat($this->rem(228, 240, $detalhe), 2, false) / 100)
+                ->setValorDesconto((float) Util::nFloat($this->rem(241, 253, $detalhe), 2, false) / 100)
+                ->setValorRecebido((float) Util::nFloat($this->rem(254, 266, $detalhe), 2, false) / 100)
+                ->setValorMora((float) Util::nFloat($this->rem(267, 279, $detalhe), 2, false) / 100)
+                ->setValorMulta((float) Util::nFloat($this->rem(280, 292, $detalhe), 2, false) / 100);
         }
 
         if ($d->hasOcorrencia('06', '15', '16')) {

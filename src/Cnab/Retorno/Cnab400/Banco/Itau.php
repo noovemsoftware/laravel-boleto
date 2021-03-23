@@ -224,7 +224,7 @@ class Itau extends AbstractRetorno implements RetornoCnab400
         $d->setCarteira($this->rem(83, 85, $detalhe))
             ->setNossoNumero($this->rem(86, 94, $detalhe))
             ->setNumeroDocumento($this->rem(117, 126, $detalhe))
-            ->setNumeroControle($this->rem(38, 62, $detalhe))
+            ->setNumeroControle((int) $this->rem(38, 62, $detalhe))
             ->setOcorrencia($this->rem(109, 110, $detalhe))
             ->setOcorrenciaDescricao(Arr::get($this->ocorrencias, $d->getOcorrencia(), 'Desconhecida'))
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
@@ -234,23 +234,23 @@ class Itau extends AbstractRetorno implements RetornoCnab400
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
         if ($this->usandoCentavos) {
-            $d->setValor($this->rem(153, 165, $detalhe))
-                ->setValorTarifa($this->rem(176, 188, $detalhe))
-                ->setValorIOF($this->rem(215, 227, $detalhe))
-                ->setValorAbatimento($this->rem(228, 240, $detalhe))
-                ->setValorDesconto($this->rem(241, 253, $detalhe))
-                ->setValorRecebido($this->rem(254, 266, $detalhe))
-                ->setValorMora($this->rem(267, 279, $detalhe)) // itau usa juros e multa no mesmo campo
-                ->setValorOutrasReceitas($this->rem(280, 292, $detalhe));
+            $d->setValor((int) $this->rem(153, 165, $detalhe))
+                ->setValorTarifa((int) $this->rem(176, 188, $detalhe))
+                ->setValorIOF((int) $this->rem(215, 227, $detalhe))
+                ->setValorAbatimento((int) $this->rem(228, 240, $detalhe))
+                ->setValorDesconto((int) $this->rem(241, 253, $detalhe))
+                ->setValorRecebido((int) $this->rem(254, 266, $detalhe))
+                ->setValorMora((int) $this->rem(267, 279, $detalhe)) // itau usa juros e multa no mesmo campo
+                ->setValorOutrasReceitas((int) $this->rem(280, 292, $detalhe));
         } else {
-            $d->setValor(Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
-                ->setValorTarifa(Util::nFloat($this->rem(176, 188, $detalhe) / 100, 2, false))
-                ->setValorIOF(Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
-                ->setValorAbatimento(Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
-                ->setValorDesconto(Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
-                ->setValorRecebido(Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
-                ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe) / 100, 2, false)) // itau usa juros e multa no mesmo campo
-                ->setValorOutrasReceitas(Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false));
+            $d->setValor((float) Util::nFloat($this->rem(153, 165, $detalhe) / 100, 2, false))
+                ->setValorTarifa((float) Util::nFloat($this->rem(176, 188, $detalhe) / 100, 2, false))
+                ->setValorIOF((float) Util::nFloat($this->rem(215, 227, $detalhe) / 100, 2, false))
+                ->setValorAbatimento((float) Util::nFloat($this->rem(228, 240, $detalhe) / 100, 2, false))
+                ->setValorDesconto((float) Util::nFloat($this->rem(241, 253, $detalhe) / 100, 2, false))
+                ->setValorRecebido((float) Util::nFloat($this->rem(254, 266, $detalhe) / 100, 2, false))
+                ->setValorMora((float) Util::nFloat($this->rem(267, 279, $detalhe) / 100, 2, false)) // itau usa juros e multa no mesmo campo
+                ->setValorOutrasReceitas((float) Util::nFloat($this->rem(280, 292, $detalhe) / 100, 2, false));
         }
 
         $msgAdicional = str_split(sprintf('%08s', $this->rem(378, 385, $detalhe)), 2) + array_fill(0, 4, '');

@@ -648,7 +648,7 @@ class Detalhe implements DetalheContract
      */
     public function setLinhaRegistro($linha)
     {
-      $this->linhaRegistro = $linha;
+      $this->linhaRegistro = (int) $linha;
       return $this;
     }
 
