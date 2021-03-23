@@ -200,6 +200,7 @@ class Banrisul extends AbstractRetorno implements RetornoCnab400
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
             ->setDataVencimento($this->rem(147, 152, $detalhe))
             ->setDataCredito($this->rem(296, 301, $detalhe))
+            ->setCodigoLiquidacao($this->rem(343, 343, $detalhe))
             ->setLinhaRegistro($this->rem(395, 400, $detalhe));
 
         if ($this->usandoCentavos) {
