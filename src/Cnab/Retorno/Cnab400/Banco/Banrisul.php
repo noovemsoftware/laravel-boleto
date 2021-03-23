@@ -268,7 +268,15 @@ class Banrisul extends AbstractRetorno implements RetornoCnab400
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
         } elseif ($d->hasOcorrencia('03', '24')) {
             $this->totais['qtdErros']++;
-            $d->setError(Arr::get($this->rejeicoes, $this->rem(383, 392, $detalhe), 'Consulte seu Internet Banking'));
+            $ocorrencia = Util::appendStrings(
+                $d->getOcorrenciaDescricao() . ':',
+                Arr::get($this->rejeicoes, $msgAdicional[0], ''),
+                Arr::get($this->rejeicoes, $msgAdicional[1], ''),
+                Arr::get($this->rejeicoes, $msgAdicional[2], ''),
+                Arr::get($this->rejeicoes, $msgAdicional[3], ''),
+                Arr::get($this->rejeicoes, $msgAdicional[4], '')
+            );
+            $d->setError($ocorrencia ?? 'Consulte seu Internet Banking');
         } else {
             $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
         }

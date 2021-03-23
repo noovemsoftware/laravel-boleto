@@ -1021,7 +1021,9 @@ final class Util
         $strings = func_get_args();
         $appended = null;
         foreach ($strings as $string) {
-            $appended .= " $string";
+            if (strlen($string) > 0) {
+                $appended .= " $string";
+            }
         }
         return trim($appended);
     }

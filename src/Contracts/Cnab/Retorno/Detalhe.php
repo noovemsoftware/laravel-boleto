@@ -25,6 +25,16 @@ interface Detalhe
     /**
      * @return mixed
      */
+    public function getNumeroControle();
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLiquidacao();
+
+    /**
+     * @return mixed
+     */
     public function getOcorrencia();
 
     /**
@@ -87,6 +97,18 @@ interface Detalhe
      * @return mixed
      */
     public function getValorRecebido();
+
+    /**
+     *
+     * @return mixed
+     */
+    public function getValorOutrasDespesas();
+
+    /**
+     *
+     * @return mixed
+     */
+    public function getValorOutrasReceitas();
 
     /**
      * @return mixed

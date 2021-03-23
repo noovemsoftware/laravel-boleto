@@ -277,6 +277,7 @@ class Itau extends AbstractRetorno implements RetornoCnab400
         } elseif ($d->hasOcorrencia('03', '15', '16', '17', '18', '24', '25', '60', '74')) {
             $this->totais['qtdErros']++;
             $error = Util::appendStrings(
+                $d->getOcorrenciaDescricao() . ':',
                 Arr::get($this->rejeicoes, $msgAdicional[0], ''),
                 Arr::get($this->rejeicoes, $msgAdicional[1], ''),
                 Arr::get($this->rejeicoes, $msgAdicional[2], ''),

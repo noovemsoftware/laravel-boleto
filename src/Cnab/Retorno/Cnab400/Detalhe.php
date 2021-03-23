@@ -322,25 +322,25 @@ class Detalhe implements DetalheContract
         return $this;
     }
 
-     /**
+    /**
     * @return string
     */
-     public function getRejeicao()
-     {
-         return $this->rejeicao;
-     }
+    public function getRejeicao()
+    {
+        return $this->rejeicao;
+    }
 
-     /**
-       * @param string $ocorrenciaTipo
-       *
-       * @return Detalhe
-       */
-     public function setRejeicao($rejeicao)
-     {
-         $this->rejeicao = $rejeicao;
+    /**
+      * @param string $ocorrenciaTipo
+      *
+      * @return Detalhe
+      */
+    public function setRejeicao($rejeicao)
+    {
+        $this->rejeicao = $rejeicao;
 
-         return $this;
-     }
+        return $this;
+    }
 
     /**
      * @param string $format
@@ -588,8 +588,8 @@ class Detalhe implements DetalheContract
      */
     public function setValorOutrasDespesas($valorOutrasDespesas)
     {
-      $this->valorOutrasDespesas = $valorOutrasDespesas;
-      return $this;
+        $this->valorOutrasDespesas = $valorOutrasDespesas;
+        return $this;
     }
 
     /**
@@ -598,7 +598,7 @@ class Detalhe implements DetalheContract
      */
     public function getValorOutrasDespesas()
     {
-      return $this->valorOutrasDespesas;
+        return $this->valorOutrasDespesas;
     }
 
     /**
@@ -608,8 +608,8 @@ class Detalhe implements DetalheContract
      */
     public function setValorOutrasReceitas($valorOutrasReceitas)
     {
-      $this->valorOutrasReceitas = $valorOutrasReceitas;
-      return $this;
+        $this->valorOutrasReceitas = $valorOutrasReceitas;
+        return $this;
     }
 
     /**
@@ -618,7 +618,7 @@ class Detalhe implements DetalheContract
      */
     public function getValorOutrasReceitas()
     {
-      return $this->valorOutrasReceitas;
+        return $this->valorOutrasReceitas;
     }
 
     /**
@@ -628,8 +628,8 @@ class Detalhe implements DetalheContract
      */
     public function setBancoOrigemCheque($bancoOrigem)
     {
-      $this->bancoOrigemCheque = $bancoOrigem;
-      return $this;
+        $this->bancoOrigemCheque = $bancoOrigem;
+        return $this;
     }
 
     /**
@@ -638,7 +638,7 @@ class Detalhe implements DetalheContract
      */
     public function getBancoOrigemCheque()
     {
-      return $this->bancoOrigemCheque;
+        return $this->bancoOrigemCheque;
     }
 
     /**
@@ -648,8 +648,8 @@ class Detalhe implements DetalheContract
      */
     public function setLinhaRegistro($linha)
     {
-      $this->linhaRegistro = (int) $linha;
-      return $this;
+        $this->linhaRegistro = (int) $linha;
+        return $this;
     }
 
     /**
@@ -658,6 +658,6 @@ class Detalhe implements DetalheContract
      */
     public function getLinhaRegistro()
     {
-      return $this->linhaRegistro;
+        return $this->linhaRegistro;
     }
 }
