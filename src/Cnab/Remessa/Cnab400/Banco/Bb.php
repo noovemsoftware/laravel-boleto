@@ -268,7 +268,7 @@ class Bb extends AbstractRemessa implements RemessaContract
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO);
         }
         if ($boleto->getStatus() == $boleto::STATUS_CUSTOM) {
-            $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
+            $this->add(109, 110, sprintf('%2.02s', $boleto->getComando()));
         }
         if ($boleto->getStatus() == $boleto::STATUS_ABATIMENTO) {
             $this->add(109, 110, self::OCORRENCIA_CONCESSAO_ABATIMENTO); // ABATIMENTO
