@@ -70,6 +70,13 @@ abstract class AbstractBoleto implements BoletoContract
     protected $desconto;
 
     /**
+     * Valor do abatimento
+     *
+     * @var string
+     */
+    protected $abatimento;
+
+    /**
      * Valor para multa
      *
      * @var float
@@ -1174,6 +1181,38 @@ abstract class AbstractBoleto implements BoletoContract
     }
 
     /**
+     * Define o valor do abatimento
+     *
+     * @param  string $valor
+     *
+     * @return AbstractBoleto
+     */
+    public function setAbatimento($abatimento)
+    {
+        if (!$this->valorEmCentavos) {
+            $this->abatimento = Util::nFloat($abatimento, 2, false);
+        } else {
+            $this->abatimento = (int) $abatimento;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retorna o valor do abatimento
+     *
+     * @return string
+     */
+    public function getAbatimento()
+    {
+        if (!$this->valorEmCentavos) {
+            return Util::nFloat($this->abatimento, 2, false);
+        } else {
+            return (int) $this->abatimento;
+        }
+    }
+
+    /**
      * Seta a % de multa
      *
      * @param  float $multa
@@ -1456,6 +1495,18 @@ abstract class AbstractBoleto implements BoletoContract
     public function baixarBoleto()
     {
         $this->status = BoletoContract::STATUS_BAIXA;
+
+        return $this;
+    }
+
+    /**
+     * Abatimento do boleto no banco
+     *
+     * @return AbstractBoleto
+     */
+    public function abaterBoleto()
+    {
+        $this->status = BoletoContract::STATUS_ABATIMENTO;
 
         return $this;
     }

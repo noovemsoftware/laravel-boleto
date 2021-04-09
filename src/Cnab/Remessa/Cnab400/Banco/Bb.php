@@ -268,8 +268,12 @@ class Bb extends AbstractRemessa implements RemessaContract
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO);
         }
         if ($boleto->getStatus() == $boleto::STATUS_CUSTOM) {
-            $this->add(109, 110, sprintf('%2.02s', $boleto->getComando()));
+            $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
         }
+        if ($boleto->getStatus() == $boleto::STATUS_ABATIMENTO) {
+            $this->add(109, 110, self::OCORRENCIA_CONCESSAO_ABATIMENTO); // ABATIMENTO
+        }
+
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
         if ($this->usandoCentavos) {
@@ -308,6 +312,13 @@ class Bb extends AbstractRemessa implements RemessaContract
         }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
+        if ($boleto->getStatus() != $boleto::STATUS_ABATIMENTO) {
+            if ($this->usandoCentavos) {
+                $this->add(206, 218, Util::formatCnab('9', (int) $boleto->getAbatimento(), 13));
+            } else {
+                $this->add(206, 218, Util::formatCnab('9', $boleto->getAbatimento(), 13, 2));
+            }
+        }
         $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '02' : '01');
         $this->add(221, 234, Util::formatCnab('9L', $boleto->getPagador()->getDocumento(), 14));
         $this->add(235, 271, Util::formatCnab('X', $boleto->getPagador()->getNome(), 37));
