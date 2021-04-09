@@ -197,7 +197,7 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
         if ($this->usandoCentavos) {
-            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13));
+            $this->add(127, 139, Util::formatCnab('9', (int) $boleto->getValor(), 13));
         } else {
             $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
         }
@@ -220,13 +220,13 @@ class Santander extends AbstractRemessa implements RemessaContract
             $this->add(157, 158, self::INSTRUCAO_BAIXAR_APOS_VENC_30);
         }
         if ($this->usandoCentavos) {
-            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+            $this->add(161, 173, Util::formatCnab('9', (int) $boleto->getMoraDia(), 13));
         } else {
             $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
         }
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
         if ($this->usandoCentavos) {
-            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+            $this->add(180, 192, Util::formatCnab('9', (int) $boleto->getDesconto(), 13));
         } else {
             $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
         }
@@ -266,7 +266,7 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(1, 1, '9');
         $this->add(2, 7, Util::formatCnab('9', $this->getCount(), 6));
         if ($this->usandoCentavos) {
-            $this->add(8, 20, Util::formatCnab('9', $this->total, 13));
+            $this->add(8, 20, Util::formatCnab('9', (int) $this->total, 13));
         } else {
             $this->add(8, 20, Util::formatCnab('9', $this->total, 13, 2));
         }

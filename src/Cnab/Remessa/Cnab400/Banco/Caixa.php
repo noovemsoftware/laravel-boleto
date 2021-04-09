@@ -198,13 +198,13 @@ class Caixa extends AbstractRemessa implements RemessaContract
             $this->add(157, 158, self::INSTRUCAO_DEVOLVER_VENC_XX);
         }
         if ($this->usandoCentavos) {
-            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13));
+            $this->add(161, 173, Util::formatCnab('9', (int) $boleto->getMoraDia(), 13));
         } else {
             $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
         }
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
         if ($this->usandoCentavos) {
-            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13));
+            $this->add(180, 192, Util::formatCnab('9', (int) $boleto->getDesconto(), 13));
         } else {
             $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
         }

@@ -1105,7 +1105,7 @@ abstract class AbstractBoleto implements BoletoContract
         if (!$this->valorEmCentavos) {
             $this->valor = Util::nFloat($valor, 2, false);
         } else {
-            $this->valor = $valor;
+            $this->valor = (int) $valor;
         }
 
         return $this;
@@ -1121,7 +1121,7 @@ abstract class AbstractBoleto implements BoletoContract
         if (!$this->valorEmCentavos) {
             return Util::nFloat($this->valor, 2, false);
         } else {
-            return $this->valor;
+            return (int) $this->valor;
         }
     }
 
