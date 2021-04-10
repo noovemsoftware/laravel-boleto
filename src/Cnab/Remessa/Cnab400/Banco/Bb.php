@@ -312,7 +312,7 @@ class Bb extends AbstractRemessa implements RemessaContract
         }
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
-        if ($boleto->getStatus() != $boleto::STATUS_ABATIMENTO) {
+        if ($boleto->getStatus() == $boleto::STATUS_ABATIMENTO) {
             if ($this->usandoCentavos) {
                 $this->add(206, 218, Util::formatCnab('9', (int) $boleto->getAbatimento(), 13));
             } else {
