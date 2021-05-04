@@ -27,7 +27,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         '03' => 'Entrada rejeitada',
         '06' => 'Liquidação normal',
         '09' => 'Baixado automaticamente via arquivo',
-        '10' => 'Baixado conforme instruções da cooperativa de crédito',
+        '10' => 'Baixado conforme instruções da cooperativa',
         '12' => 'Abatimento concedido',
         '13' => 'Abatimento cancelado',
         '14' => 'Vencimento alterado',
@@ -45,6 +45,14 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         '33' => 'Confirmação de pedido de alteração de outros dados',
         '34' => 'Retirado de cartório e manutenção em carteira',
         '35' => 'Aceite do pagador',
+        '78' => 'Confirmação de recebimento de pedido de negativação',
+        '79' => 'Confirmação de recebimento de pedido de exclusão de negativação',
+        '80' => 'Confirmação de entrada de negativação',
+        '81' => 'Entrada de negativação rejeitada',
+        '82' => 'Confirmação de exclusão de negativação',
+        '83' => 'Exclusão de negativação rejeitada',
+        '84' => 'Exclusão de negativação por outros motivos',
+        '85' => 'Ocorrência informacional por outros motivos'
     ];
 
     /**
@@ -53,18 +61,17 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
      * @var array
      */
     private $rejeicoes = [
-        '0A' => 'Aceito',
-        '0D' => 'Desprezado',
         '01' => 'Código do banco inválido',
         '02' => 'Código do registro detalhe inválido',
         '03' => 'Código da ocorrência inválido',
         '04' => 'Código de ocorrência não permitida para a carteira',
         '05' => 'Código de ocorrência não numérico',
-        '07' => 'Cooperativa/agência/conta/dígito inválidos',
-        '08' => 'Nosso número inválido',
-        '09' => 'Nosso número duplicado',
+        '07' => 'Cooperativa/conta/dígito inválidos',
+        '08' => 'Nosso Número inválido',
+        '09' => 'Nosso Número duplicado',
         '10' => 'Carteira inválida',
-        '15' => 'Cooperativa/carteira/agência/conta/nosso número inválidos',
+        '14' => 'Título protestado',
+        '15' => 'Cooperativa/carteira/agência/conta/Nosso Número inválidos',
         '16' => 'Data de vencimento inválida',
         '17' => 'Data de vencimento anterior à data de emissão',
         '18' => 'Vencimento fora do prazo de operação',
@@ -73,30 +80,35 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         '22' => 'Espécie não permitida para a carteira',
         '24' => 'Data de emissão inválida',
         '29' => 'Valor do desconto maior/igual ao valor do título',
-        '31' => 'Concessão de desconto - existe desconto anterior',
+        '31' => 'Concessão de desconto - Existe desconto anterior',
         '33' => 'Valor do abatimento inválido',
         '34' => 'Valor do abatimento maior/igual ao valor do título',
-        '36' => 'Concessão de abatimento - existe abatimento anterior',
-        '38' => 'Prazo para protesto inválido',
+        '36' => 'Concessão de abatimento - Existe abatimento anterior',
+        '38' => 'Prazo para protesto/negativação inválido',
         '39' => 'Pedido para protesto não permitido para o título',
-        '40' => 'Título com ordem de protesto emitida',
+        '40' => 'Título com ordem de protesto/pedido de negativação emitido',
         '41' => 'Pedido cancelamento/sustação sem instrução de protesto',
-        '44' => 'Cooperativa de crédito/agência beneficiária não prevista',
+        '44' => 'Cooperativa/agência beneficiária não prevista',
         '45' => 'Nome do pagador inválido',
         '46' => 'Tipo/número de inscrição do pagador inválidos',
         '47' => 'Endereço do pagador não informado',
         '48' => 'CEP irregular',
-        '49' => 'Número de Inscrição do pagador/avalista inválido',
-        '50' => 'Pagador/avalista não informado',
+        '49' => 'Tipo de Pessoa do Beneficiário Final inválido',
+        '50' => 'CEP Irregular - Banco Correspondente',
+        '53' => 'Número de Inscrição do Beneficiário Final inválido',
+        '54' => 'Beneficiário Final não informado',
         '60' => 'Movimento para título não cadastrado',
         '63' => 'Entrada para título já cadastrado',
+        '0A' => 'Aceito',
+        '0D' => 'Desprezado',
         'A1' => 'Praça do pagador não cadastrada.',
         'A2' => 'Tipo de cobrança do título divergente com a praça do pagador.',
-        'A3' => 'Cooperativa/agência depositária divergente: atualiza o cadastro de praças da Coop./agência beneficiária',
-        'A4' => 'Beneficiário não cadastrado ou possui CGC/CIC inválido',
+        'A3' => 'Cooperativa/agência depositária divergente: atualizar o cadastro de praças da Cooperativa/agência beneficiária',
+        'A4' => 'Beneficiário não cadastrado ou possui CNPJ/CIC inválido',
         'A5' => 'Pagador não cadastrado',
         'A6' => 'Data da instrução/ocorrência inválida',
         'A7' => 'Ocorrência não pode ser comandada',
+        'A8' => 'Recebimento da liquidação fora da rede Sicredi - Via compensação eletrônica',
         'B4' => 'Tipo de moeda inválido',
         'B5' => 'Tipo de desconto/juros inválido',
         'B6' => 'Mensagem padrão não cadastrada',
@@ -105,7 +117,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         'B9' => 'Valor ou percentual de juros inválido',
         'C1' => 'Data limite para concessão de desconto inválida',
         'C2' => 'Aceite do título inválido',
-        'C3' => 'Campo alterado na instrução “31 – alteração de outros dados” inválido',
+        'C3' => 'Campo alterado na instrução “31 - alteração de outros dados” inválido',
         'C4' => 'Título ainda não foi confirmado pela centralizadora',
         'C5' => 'Título rejeitado pela centralizadora',
         'C6' => 'Título já liquidado',
@@ -113,49 +125,52 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         'C8' => 'Existe mesma instrução pendente de confirmação para este título',
         'C9' => 'Instrução prévia de concessão de abatimento não existe ou não confirmada',
         'D1' => 'Título dentro do prazo de vencimento (em dia)',
-        'D2' => 'Espécie de documento não permite protesto de título',
+        'D2' => 'Espécie de documento não permite protesto/negativação de título',
         'D3' => 'Título possui instrução de baixa pendente de confirmação',
         'D4' => 'Quantidade de mensagens padrão excede o limite permitido',
         'D5' => 'Quantidade inválida no pedido de boletos pré-impressos da cobrança sem registro',
         'D6' => 'Tipo de impressão inválida para cobrança sem registro',
         'D7' => 'Cidade ou Estado do pagador não informado',
-        'D8' => 'Seqüência para composição do nosso número do ano atual esgotada',
+        'D8' => 'Sequência para composição do nosso número do ano atual esgotada',
         'D9' => 'Registro mensagem para título não cadastrado',
         'E2' => 'Registro complementar ao cadastro do título da cobrança com e sem registro não cadastrado',
-        'E3' => 'Tipo de postagem inválido, diferente de S, N e branco',
+        'E3' => 'Tipo de postagem inválido, diferente de S, N e Brancos',
         'E4' => 'Pedido de boletos pré-impressos',
         'E5' => 'Confirmação/rejeição para pedidos de boletos não cadastrado',
-        'E6' => 'Pagador/avalista não cadastrado',
+        'E6' => 'Pagador/beneficiário final não cadastrado',
         'E7' => 'Informação para atualização do valor do título para protesto inválido',
-        'E8' => 'Tipo de impressão inválido, diferente de A, B e branco',
-        'E9' => 'Código do pagador do título divergente com o código da cooperativa de crédito',
+        'E8' => 'Tipo de impressão inválido, diferente de A, B e Brancos',
+        'E9' => 'Código do pagador do título divergente com o código da Cooperativa',
         'F1' => 'Liquidado no sistema do cliente',
         'F2' => 'Baixado no sistema do cliente',
         'F3' => 'Instrução inválida, este título está caucionado/descontado',
         'F4' => 'Instrução fixa com caracteres inválidos',
-        'F6' => 'Nosso número / número da parcela fora de seqüência – total de parcelas inválido',
+        'F6' => 'Nosso Número/número da parcela fora de sequência/Total de parcelas inválido',
         'F7' => 'Falta de comprovante de prestação de serviço',
-        'F8' => 'Nome do beneficiário incompleto / incorreto.',
-        'F9' => 'CNPJ / CPF incompatível com o nome do pagador / Sacador Avalista',
-        'G1' => 'CNPJ / CPF do pagador Incompatível com a espécie',
+        'F8' => 'Nome do beneficiário incompleto/incorreto.',
+        'F9' => 'CNPJ/CPF incompatível com o nome do pagador/Beneficiário Final',
+        'G1' => 'CNPJ/CPF do pagador Incompatível com a espécie',
         'G2' => 'Título aceito: sem a assinatura do pagador',
         'G3' => 'Título aceito: rasurado ou rasgado',
         'G4' => 'Título aceito: falta título (cooperativa/ag. beneficiária deverá enviá-lo)',
         'G5' => 'Praça de pagamento incompatível com o endereço',
         'G6' => 'Título aceito: sem endosso ou beneficiário irregular',
         'G7' => 'Título aceito: valor por extenso diferente do valor numérico',
-        'G8' => 'Saldo maior que o valor do título',
+        'G8' => 'Linha digitável maior que o valor do título',
         'G9' => 'Tipo de endosso inválido',
-        'H1' => 'Nome do pagador incompleto / Incorreto',
+        'H1' => 'Nome do pagador incompleto/Incorreto',
         'H2' => 'Sustação judicial',
         'H3' => 'Pagador não encontrado',
         'H4' => 'Alteração de carteira',
-        'H7' => 'Espécie de documento necessita beneficiário ou avalista PJ',
+        'H5' => 'Recebimento de liquidação fora da rede Sicredi - VLB Inferior - Via Compensação',
+        'H6' => 'Recebimento de liquidação fora da rede Sicredi - VLB Superior - Via Compensação',
+        'H7' => 'Espécie de documento necessita beneficiário ou beneficiário final PJ',
+        'H8' => 'Recebimento de liquidação fora da rede Sicredi - Contingência Via Compe',
         'H9' => 'Dados do título não conferem com disquete',
-        'I1' => 'Pagador e Sacador Avalista são a mesma pessoa',
+        'I1' => 'Pagador e Beneficiário Final são a mesma pessoa',
         'I2' => 'Aguardar um dia útil após o vencimento para protestar',
         'I3' => 'Data do vencimento rasurada',
-        'I4' => 'Vencimento – extenso não confere com número',
+        'I4' => 'Vencimento - extenso não confere com número',
         'I5' => 'Falta data de vencimento no título',
         'I6' => 'DM/DMI sem comprovante autenticado ou declaração',
         'I7' => 'Comprovante ilegível para conferência e microfilmagem',
@@ -169,12 +184,12 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         'J6' => 'Falta assinatura do pagador no título',
         'J7' => 'Nome do apresentante não informado/incompleto/incorreto',
         'J8' => 'Erro de preenchimento do titulo',
-        'J9' => 'Titulo com direito de regresso vencido',
-        'K1' => 'Titulo apresentado em duplicidade',
-        'K2' => 'Titulo já protestado',
-        'K3' => 'Letra de cambio vencida – falta aceite do pagador',
+        'J9' => 'Título com direito de regresso vencido',
+        'K1' => 'Título apresentado em duplicidade',
+        'K2' => 'Título já protestado',
+        'K3' => 'Letra de cambio vencida - Falta aceite do pagador',
         'K4' => 'Falta declaração de saldo assinada no título',
-        'K5' => 'Contrato de cambio – Falta conta gráfica',
+        'K5' => 'Contrato de câmbio - Falta conta gráfica',
         'K6' => 'Ausência do documento físico',
         'K7' => 'Pagador falecido',
         'K8' => 'Pagador apresentou quitação do título',
@@ -184,7 +199,29 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
         'L3' => 'Apresentante não aceita publicação de edital',
         'L4' => 'Dados do Pagador em Branco ou inválido',
         'L5' => 'Código do Pagador na agência beneficiária está duplicado',
+        'L6' => 'Tipo de comando de instrução inválida para beneficiário pessoa física.',
+        'L7' => 'Não permitido cadastro de boleto com negativação automática e protesto automático simultaneamente',
+        'M1' => 'Reconhecimento da dívida pelo pagador',
         'M2' => 'Não reconhecimento da dívida pelo pagador',
+        'M3' => 'Inclusão de desconto 2 e desconto 3 inválidos',
+        'N1' => 'Decurso de prazo',
+        'N2' => 'Determinação judicial',
+        'N3' => 'Solicitação da empresa conveniada',
+        'N4' => 'Devolução de comunicado pelos correios',
+        'N5' => 'Outros',
+        'S1' => 'Rejeitado pela empresa de negativação parceira',
+        'X1' => 'Regularização centralizadora - Rede Sicredi',
+        'X2' => 'Regularização centralizadora - Compensação',
+        'X3' => 'Regularização centralizadora - Banco correspondente',
+        'X4' => 'Regularização centralizadora - VLB Inferior - via compensação',
+        'X5' => 'Regularização centralizadora - VLB Superior - via compensação',
+        'X0' => 'Pago com cheque',
+        'X6' => 'Pago com cheque - bloqueado 24 horas',
+        'X7' => 'Pago com cheque - bloqueado 48 horas',
+        'X8' => 'Pago com cheque - bloqueado 72 horas',
+        'X9' => 'Pago com cheque - bloqueado 96 horas',
+        'XA' => 'Pago com cheque - bloqueado 120 horas',
+        'XB' => 'Pago com cheque - bloqueado 144 horas',
     ];
 
     /**
@@ -222,9 +259,10 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
             ->setOperacao($this->rem(3, 9, $header))
             ->setServicoCodigo($this->rem(10, 11, $header))
             ->setServico($this->rem(12, 26, $header))
-            ->setConta($this->rem(27, 31, $header))
-            ->setCodigoCliente($this->rem(32, 45, $header))
-            ->setData($this->rem(95, 102, $header), 'Ymd');
+            ->setCodigoCliente($this->rem(27, 31, $header))
+            ->setDocumento($this->rem(32, 45, $header))
+            ->setData($this->rem(95, 102, $header), 'Ymd')
+            ->setNumeroRetorno($this->rem(111, 117, $header));
 
         return true;
     }
@@ -239,8 +277,8 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
     {
         $d = $this->detalheAtual();
         $d->setNossoNumero($this->rem(48, 62, $detalhe))
-            ->setNumeroControle($this->rem(117, 126, $detalhe))
             ->setNumeroDocumento($this->rem(117, 126, $detalhe))
+            ->setNumeroControle($this->rem(117, 126, $detalhe))
             ->setOcorrencia($this->rem(109, 110, $detalhe))
             ->setOcorrenciaDescricao(Arr::get($this->ocorrencias, $d->getOcorrencia(), 'Desconhecida'))
             ->setDataOcorrencia($this->rem(111, 116, $detalhe))
@@ -266,7 +304,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
                 ->setValorMulta((float) Util::nFloat($this->rem(280, 292, $detalhe), 2, false) / 100);
         }
 
-        if ($d->hasOcorrencia('06', '15', '16')) {
+        if ($d->hasOcorrencia('06', '15', '17')) {
             $this->totais['qtdLiquidados']++;
             $this->totais['vlrLiquidados'] += $d->getValorRecebido();
             $d->setOcorrenciaTipo($d::OCORRENCIA_LIQUIDADA);
@@ -274,7 +312,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
             $this->totais['qtdEntradas']++;
             $this->totais['vlrEntradas'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ENTRADA);
-        } elseif ($d->hasOcorrencia('09', '10')) {
+        } elseif ($d->hasOcorrencia('09')) {
             $this->totais['qtdBaixados']++;
             $this->totais['vlrBaixados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_BAIXADA);
@@ -282,36 +320,26 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
             $this->totais['qtdProtestados']++;
             $this->totais['vlrProtestados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_PROTESTADA);
-        } elseif ($d->hasOcorrencia('33')) {
+        } elseif ($d->hasOcorrencia('14', '33')) {
             $this->totais['qtdAlterados']++;
             $this->totais['vlrAlterados'] += $d->getValor();
             $d->setOcorrenciaTipo($d::OCORRENCIA_ALTERACAO);
-        } elseif ($d->hasOcorrencia('03', '27', '30')) {
+        } elseif ($d->hasOcorrencia('03', '27', '30', '32')) {
             $this->totais['qtdErros']++;
-            if ($d->hasOcorrencia('03')) {
-                if (isset($this->rejeicoes[$this->rem(319, 320, $detalhe)])) {
-                    $d->setRejeicao($this->rejeicoes[$this->rem(319, 320, $detalhe)]);
-                }
-            }
-        } else {
-            $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
-        }
-
-        $stringErrors = sprintf('%010s', $this->rem(319, 328, $detalhe));
-        $errorsRetorno = str_split($stringErrors, 2) + array_fill(0, 5, '') + array_fill(0, 5, '');
-        if (trim($stringErrors, '0') != '') {
-            $error = [];
+            $message = $d->getOcorrenciaDescricao();
+            $errorsRetorno = str_split($this->rem(319, 328, $detalhe), 2) + array_fill(0, 5, '');
             $error[] = Arr::get($this->rejeicoes, $errorsRetorno[0], '');
             $error[] = Arr::get($this->rejeicoes, $errorsRetorno[1], '');
             $error[] = Arr::get($this->rejeicoes, $errorsRetorno[2], '');
             $error[] = Arr::get($this->rejeicoes, $errorsRetorno[3], '');
             $error[] = Arr::get($this->rejeicoes, $errorsRetorno[4], '');
-
             $error = array_filter($error);
-
             if (count($error) > 0) {
-                $d->setError(implode(PHP_EOL, $error));
+                $message .=  ': ' . implode('; ', $error) . '.';
             }
+            $d->setError($message);
+        } else {
+            $d->setOcorrenciaTipo($d::OCORRENCIA_OUTROS);
         }
 
         $this->totais['qtdTitulos']++;
@@ -324,6 +352,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
      * @param array $trailer
      *
      * @return bool
+     * @throws \Exception
      */
     protected function processarTrailer(array $trailer)
     {
