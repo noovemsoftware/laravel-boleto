@@ -26,7 +26,6 @@ class Sicredi extends AbstractBoleto implements BoletoContract
      *
      * @var string
      */
-
     protected $codigoBanco = self::COD_BANCO_SICREDI;
 
     /**
@@ -34,7 +33,7 @@ class Sicredi extends AbstractBoleto implements BoletoContract
      *
      * @var array
      */
-    protected $carteiras = ['A'];
+    protected $carteiras = ['1', '2', '3'];
 
     /**
      * Espécie do documento, coódigo para remessa
