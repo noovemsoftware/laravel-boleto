@@ -459,7 +459,7 @@ class RemessaCnab400Test extends TestCase
                 'numeroDocumento'        => 1,
                 'pagador'                => self::$pagador,
                 'beneficiario'           => self::$beneficiario,
-                'carteira'               => '1',
+                'carteira'               => 'A',
                 'byte'                   => 2,
                 'agencia'                => 1111,
                 'posto'                  => 11,
