@@ -411,7 +411,7 @@ class BoletoTest extends TestCase
                 'numeroDocumento'        => 1,
                 'pagador'                => self::$pagador,
                 'beneficiario'           => self::$beneficiario,
-                'carteira'               => 'A',
+                'carteira'               => '1',
                 'byte'                   => 2,
                 'agencia'                => 1111,
                 'posto'                  => 11,
