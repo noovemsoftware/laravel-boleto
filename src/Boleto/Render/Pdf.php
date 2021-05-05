@@ -15,6 +15,7 @@ class Pdf extends AbstractPdf implements PdfContract
     const OUTPUT_STRING = 'S';
 
     protected $PadraoFont = 'Arial';
+
     /**
      * @var BoletoContract[]
      */
@@ -142,7 +143,7 @@ class Pdf extends AbstractPdf implements PdfContract
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
         $this->Cell(75, $this->desc, $this->_('Beneficiário'), 'TLR');
-        $this->Cell(35, $this->desc, $this->_('Agência/Código do beneficiário'), 'TR');
+        $this->Cell(35, $this->desc, $this->_('Agência / Código do beneficiário'), 'TR');
         $this->Cell(10, $this->desc, $this->_('Espécie'), 'TR');
         $this->Cell(15, $this->desc, $this->_('Quantidade'), 'TR');
         $this->Cell(35, $this->desc, $this->_('Nosso Número'), 'TR', 1);
@@ -169,7 +170,7 @@ class Pdf extends AbstractPdf implements PdfContract
         $this->Cell(50, $this->cell, $this->_(Util::nReal($this->boleto[$i]->getValor())), 'R', 1, 'R');
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
-        $this->Cell(30, $this->desc, $this->_('(-) Descontos/Abatimentos'), 'TLR');
+        $this->Cell(30, $this->desc, $this->_('(-) Descontos / Abatimentos'), 'TLR');
         $this->Cell(30, $this->desc, $this->_('(-) Outras Deduções'), 'TR');
         $this->Cell(30, $this->desc, $this->_('(+) Mora Multa'), 'TR');
         $this->Cell(30, $this->desc, $this->_('(+) Acréscimos'), 'TR');
@@ -229,7 +230,7 @@ class Pdf extends AbstractPdf implements PdfContract
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
         $this->Cell(120, $this->desc, $this->_('Beneficiário'), 'TLR');
-        $this->Cell(50, $this->desc, $this->_('Agência/Código beneficiário'), 'TR', 1);
+        $this->Cell(50, $this->desc, $this->_('Agência / Código do beneficiário'), 'TR', 1);
 
         $this->SetFont($this->PadraoFont, 'B', $this->fcel);
         $this->Cell(120, $this->cell, $this->_($this->boleto[$i]->getBeneficiario()->getNomeDocumento()), 'LR');
@@ -299,7 +300,7 @@ class Pdf extends AbstractPdf implements PdfContract
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
         $this->Cell(120, $this->desc, $this->_("Instruções de responsabilidade do beneficiário. Qualquer dúvida sobre este boleto, contate o beneficiário"), 'TLR');
-        $this->Cell(50, $this->desc, $this->_('(-) Desconto / Abatimentos)'), 'TR', 1);
+        $this->Cell(50, $this->desc, $this->_('(-) Desconto / Abatimentos'), 'TR', 1);
 
         $xInstrucoes = $this->GetX();
         $yInstrucoes = $this->GetY();
@@ -315,7 +316,7 @@ class Pdf extends AbstractPdf implements PdfContract
         $this->Cell(50, $this->cell, $this->_(''), 'R', 1);
 
         $this->Cell(120, $this->desc, $this->_(''), 'LR');
-        $this->Cell(50, $this->desc, $this->_('(+) Mora / Multa' . ($this->boleto[$i]->getCodigoBanco() == '104') ? ' / Juros' : ''), 'TR', 1);
+        $this->Cell(50, $this->desc, $this->_('(+) Mora / Multa' . ($this->boleto[$i]->getCodigoBanco() == '104' ? ' / Juros' : '')), 'TR', 1);
 
         $this->Cell(120, $this->cell, $this->_(''), 'LR');
         $this->Cell(50, $this->cell, $this->_(''), 'R', 1);
@@ -341,13 +342,13 @@ class Pdf extends AbstractPdf implements PdfContract
         $this->Cell(0, $this->cell, $this->_($this->boleto[$i]->getPagador()->getCepCidadeUf()), 'LR', 1);
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
-        $this->Cell(120, $this->cell, $this->_(''), 'BLR');
+        $this->Cell(120, $this->cell, $this->_(''), 'BL');
         $this->Cell(12, $this->cell, $this->_('Cód. Baixa'), 'B');
         $this->SetFont($this->PadraoFont, 'B', $this->fcel);
         $this->Cell(38, $this->cell, $this->_(''), 'BR', 1);
 
         $this->SetFont($this->PadraoFont, '', $this->fdes);
-        $this->Cell(20, $this->desc, $this->_('Sacador/Avalista'), 0);
+        $this->Cell(20, $this->desc, $this->_('Sacador / Avalista'), 0);
         $this->Cell(98, $this->desc, $this->_($this->boleto[$i]->getSacadorAvalista() ? $this->boleto[$i]->getSacadorAvalista()->getNomeDocumento() : ''), 0);
         $this->Cell(52, $this->desc, $this->_('Autenticação mecânica - Ficha de Compensação'), 0, 1);
 
@@ -482,7 +483,7 @@ class Pdf extends AbstractPdf implements PdfContract
         if ($nameFile == null) {
             $nameFile = Str::random(32);
         }
-        
+
         return $this->Output($nameFile . '.pdf', $dest, $this->print);
     }
 
