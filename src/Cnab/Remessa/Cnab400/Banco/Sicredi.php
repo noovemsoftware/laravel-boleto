@@ -19,6 +19,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     const ESPECIE_NOTA_DEBITOS = 'I';
     const ESPECIE_NOTA_SERVICOS = 'J';
     const ESPECIE_OUTROS = 'K';
+    const ESPECIE_PROPOSTA = 'O';
 
     const OCORRENCIA_REMESSA = '01';
     const OCORRENCIA_BAIXA = '02';
@@ -29,6 +30,9 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     const OCORRENCIA_SUSTAR_PROTESTO = '18';
     const OCORRENCIA_SUSTAR_PROTESTO_MANTER_CARTEIRA = '19';
     const OCORRENCIA_ALT_OUTROS_DADOS = '31';
+    const OCORRENCIA_INCL_NEGATIVACAO = '45';
+    const OCORRENCIA_EXCL_NEGATIVACAO_MANTER_CARTEIRA = '75';
+    const OCORRENCIA_EXCL_NEGATIVACAO_BAIXAR = '76';
 
     const INSTRUCAO_SEM = '00';
     const INSTRUCAO_PROTESTO = '06';
@@ -36,7 +40,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
     public function __construct(array $params)
     {
         parent::__construct($params);
-        $this->setCarteira('A'); //Carteira Simples 'A'
+        $this->setCarteira('A'); // Carteira Simples 'A'
         $this->addCampoObrigatorio('idremessa');
     }
 
@@ -49,7 +53,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
      */
     public function setCarteira($carteira)
     {
-        $this->carteira = 'A';
+        $this->carteira = $carteira;
         return $this;
     }
 
@@ -124,12 +128,13 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         $this->add(2, 2, '1');
         $this->add(3, 9, 'REMESSA');
         $this->add(10, 11, '01');
-        $this->add(12, 26, Util::formatCnab('X', 'COBRANCA', 15));
+        $this->add(12, 19, Util::formatCnab('X', 'COBRANCA', 8));
+        $this->add(20, 26, '');
         $this->add(27, 31, Util::formatCnab('9', $this->getCodigoCliente(), 5));
         $this->add(32, 45, Util::formatCnab('9L', $this->getBeneficiario()->getDocumento(), 14, 0, 0));
         $this->add(46, 76, '');
         $this->add(77, 79, $this->getCodigoBanco());
-        $this->add(80, 94, Util::formatCnab('X', 'Sicredi', 15));
+        $this->add(80, 94, Util::formatCnab('X', 'SICREDI', 15));
         $this->add(95, 102, $this->getDataRemessa('Ymd'));
         $this->add(103, 110, '');
         $this->add(111, 117, Util::formatCnab('9', $this->getIdremessa(), 7));
@@ -192,7 +197,11 @@ class Sicredi extends AbstractRemessa implements RemessaContract
         }
         $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
         $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(127, 139, Util::formatCnab('9', (int) $boleto->getValor(), 13));
+        } else {
+            $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        }
         $this->add(140, 148, '');
         $this->add(149, 149, $boleto->getEspecieDocCodigo('A', 400));
         $this->add(150, 150, $boleto->getAceite());
@@ -203,12 +212,23 @@ class Sicredi extends AbstractRemessa implements RemessaContract
             $this->add(157, 158, self::INSTRUCAO_PROTESTO);
             $this->add(159, 160, Util::formatCnab('9', $boleto->getDiasProtesto(), 2));
         }
-        $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(161, 173, Util::formatCnab('9', (int) $boleto->getMoraDia(), 13));
+        } else {
+            $this->add(161, 173, Util::formatCnab('9', $boleto->getMoraDia(), 13, 2));
+        }
         $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
-        $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
+        if ($this->usandoCentavos) {
+            $this->add(180, 192, Util::formatCnab('9', (int) $boleto->getDesconto(), 13));
+        } else {
+            $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        }
+        $this->add(193, 194, '00');
+        $this->add(195, 196, '00');
+        $this->add(197, 205, Util::formatCnab('9', 0, 9));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
-        $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '20' : '10');
+        $this->add(219, 219, strlen(Util::onlyNumbers($boleto->getPagador()->getDocumento())) == 14 ? '2' : '1');
+        $this->add(220, 220, '0');
         $this->add(221, 234, Util::formatCnab('9L', $boleto->getPagador()->getDocumento(), 14));
         $this->add(235, 274, Util::formatCnab('X', $boleto->getPagador()->getNome(), 40));
         $this->add(275, 314, Util::formatCnab('X', $boleto->getPagador()->getEndereco(), 40));

@@ -55,6 +55,16 @@ class Header implements HeaderContract
     protected $codigoCliente;
 
     /**
+     * @var string
+     */
+    protected $documento;
+
+    /**
+     * @var string
+     */
+    protected $numeroRetorno;
+
+    /**
      * @return string
      */
     public function getOperacaoCodigo()
@@ -274,6 +284,50 @@ class Header implements HeaderContract
     public function setCodigoCliente($codigoCliente)
     {
         $this->codigoCliente = ltrim(trim($codigoCliente, ' '), '0');
+
+        return $this;
+    }
+
+    /**
+     * CPF/CNPJ do Beneficiário
+     *
+     * @return string
+     */
+    public function getDocumento()
+    {
+        return $this->documento;
+    }
+
+    /**
+     * @param string $documento
+     *
+     * @return Header
+     */
+    public function setDocumento($documento)
+    {
+        $this->documento = $documento;
+
+        return $this;
+    }
+
+    /**
+     * Número do retorno
+     *
+     * @return string
+     */
+    public function getNumeroRetorno()
+    {
+        return $this->numeroRetorno;
+    }
+
+    /**
+     * @param string $numeroRetorno
+     *
+     * @return Header
+     */
+    public function setNumeroRetorno($numeroRetorno)
+    {
+        $this->documento = $numeroRetorno;
 
         return $this;
     }
