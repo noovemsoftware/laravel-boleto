@@ -19,7 +19,7 @@ class Sicredi extends AbstractBoleto implements BoletoContract
      *
      * @var string
      */
-    protected $localPagamento = 'Pagável preferencialmente nas cooperativas de crédito do sicredi';
+    protected $localPagamento = 'Pagável preferencialmente em canais eletrônicos da sua instituição financeira';
 
     /**
      * Código do banco
